@@ -78,7 +78,6 @@ if (isset($_POST['update'])) {
 
     $sql = "UPDATE student SET name = ?, point = ? WHERE id = ?";
     $db_utils->execute($sql, [$name, $point, $id]);
-
     header("Location: b1.php");
     exit;
 }
@@ -184,5 +183,10 @@ if (isset($_GET['id'])) {
         border: 1px solid black;
         border-collapse: collapse;
         padding: 10px;
+    }
+
+    h1{
+        font-size: 1.5rem;
+        font-family: 'Times New Roman', Times, serif;
     }
 </style>
