@@ -12,8 +12,17 @@ class Router
 
         $segments = $path === '' ? [] : explode('/', $path);
         $controllerName = ucfirst($segments[0] ?? 'home') . 'Controller';
-        $action =$segments[1] ?? 'index';
+
+        $action = $segments[1] ?? 'index';
         $params = array_slice($segments, 2);
+
+        if (!class_exists($controllerName)) {
+            $this->notFound("Controller $controllerName not found");
+            return;
+        }
+        $controller = new $controllerName();
+
+        call_user_func_array([$controller, $action], $params);
     }
     public function basePath(): string
     {

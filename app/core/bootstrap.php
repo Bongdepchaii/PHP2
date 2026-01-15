@@ -1,7 +1,8 @@
 <?php
+
 define('BASE_PATH', dirname(__DIR__, 2));
 define('APP_PATH', BASE_PATH . '/app');
-define('VIEW_PATH', APP_PATH. '/views');
+define('VIEW_PATH', APP_PATH . '/views');
 define('CONTROLLER_PATH', APP_PATH . '/controllers');
 define('MODEL_PATH', APP_PATH . '/models');
 
@@ -13,7 +14,7 @@ spl_autoload_register(function (string $class): void {
     ];
 
     foreach ($paths as $path) {
-        if (file_exists($path)){
+        if (file_exists($path)) {
             require_once $path;
             return;
         }

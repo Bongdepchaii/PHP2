@@ -1,7 +1,7 @@
 <?php
-class ProductModel extends Model
+class Product extends Model
 {
-    private $table = 'products';
+    private $table = 'product';
     public function all()
     {
         $sql = "Select * from " . $this->table;
