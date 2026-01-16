@@ -1,0 +1,73 @@
+<html>
+
+<head>
+    <title><?= $title ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" ...>
+</head>
+
+<body>
+    <div class="container mt-3 header">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand" href="/home/index">Home</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/products/index">Sản phẩm</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categorys/index">Danh mục</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/trademarks/index">Thương hiệu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/index">Người dùng</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="container mt-5 main">
+        <a href="/users/add" class="btn btn-outline-dark mb-4 form-control p-2">Tạo người dùng</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Giới tính</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Tuổi</th>
+                    <th scope="col">Địa chỉ</th>
+                    <th scope="col">Ngày tạo</th>
+                    <th scope="col">Quyền</th>
+                    <th scope="col">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($user as $item): ?>
+                    <tr>
+                        <th scope="row"><?= $item['id'] ?></th>
+                        <td><?= $item['name'] ?></td>
+                        <td><?= $item['sex'] ?></td>
+                        <td><?= $item['email'] ?></td>
+                        <td><?= $item['age'] ?></td>
+                        <td><?= $item['address'] ?></td>
+                        <td><?= $item['created_at'] ?></td>
+                        <td><?= $item['role'] ?></td>
+                        <td><button class="btn btn-primary">Sửa</button><button style="margin-left: 5px;" class="btn btn-danger">Xoá</button></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>
+<style>
+    div.main {
+        max-width: 1100px;
+    }
+</style>

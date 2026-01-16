@@ -1,7 +1,7 @@
 <?php
-class Category extends Model
+class User extends Model
 {
-    private $table = "category";
+    private $table = "user";
     public function all()
     {
         $sql = "select * from $this->table";
@@ -24,10 +24,13 @@ class Category extends Model
 
     public function create($data = [])
     {
-        $sql = "insert into $this->table ('name', 'created_at') values(:name, :created_at)";
+        $sql = "insert into $this->table ('username', 'password', 'email', 'name', 'sex', 'age', 'address', 'created_at') values(:username, :password, :email, :name, :sex, :age, :address, :created_at)";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
+            'username' => $data['username'],
+            'password' => $data['password'],
+            'email' => $data['email'],
             'name' => $data['name'],
             'created_at' => $data['created_at'],
         ]);

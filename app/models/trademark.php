@@ -24,27 +24,31 @@ class Category extends Model
 
     public function create($data = [])
     {
-        $sql = "insert into $this->table ('name', 'created_at') values(:name, :created_at)";
+        $sql = "insert into $this->table ('name', 'img', 'created_at') values(:name, :img, :created_at)";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
             'name' => $data['name'],
+            'img' => $data['img'],
             'created_at' => $data['created_at'],
         ]);
     }
 
-    public function update($data = [], $id) {
-        $sql = "update $this->table set name = :name, created_at = :created_at where id = :id";
+    public function update($data = [], $id)
+    {
+        $sql = "update $this->table set name = :name, img = :img, created_at = :created_at where id = :id";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
             'name' => $data['name'],
+            'img' => $data['img'],
             'created_at' => $data['created_at'],
             'id' => $id
         ]);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $sql = "delete from $this->table where id = :id";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
@@ -53,5 +57,3 @@ class Category extends Model
         ]);
     }
 }
-
-?>

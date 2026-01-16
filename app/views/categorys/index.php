@@ -9,44 +9,40 @@
       <nav class="navbar navbar-expand-lg navbar-light">
          <a class="navbar-brand" href="/home/index">Home</a>
          <div class="collapse navbar-collapse" id="navbarNav">
-           <ul class="navbar-nav">
+            <ul class="navbar-nav">
                <li class="nav-item active">
-                  <a class="nav-link" href="/product/index">Sản phẩm</a>
+                  <a class="nav-link" href="/products/index">Sản phẩm</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link" href="/category/index">Danh mục</a>
+                  <a class="nav-link" href="/categorys/index">Danh mục</a>
                </li>
                               <li class="nav-item">
-                  <a class="nav-link" href="/trademark/index">Thương hiệu</a>
+                  <a class="nav-link" href="/trademarks/index">Thương hiệu</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link" href="/user/index">Người dùng</a>
+                  <a class="nav-link" href="/users/index">Người dùng</a>
                </li>
             </ul>
          </div>
       </nav>
    </div>
    <div class="container mt-5 main">
-      <a href="/category/add" class="btn btn-outline-dark mb-4 form-control p-2">Thêm sản phẩm</a>
+      <a href="/category/add" class="btn btn-outline-dark mb-4 form-control p-2">Thêm danh mục</a>
       <table class="table">
          <thead>
             <tr>
                <th scope="col">ID</th>
                <th scope="col">Tên sản phẩm</th>
-               <th scope="col">Giá</th>
-               <th scope="col">Mô tả</th>
                <th scope="col">Ngày tạo</th>
                <th scope="col">Hành động</th>
             </tr>
          </thead>
          <tbody>
-            <?php foreach ($products as $item): ?>
+            <?php foreach ($category as $item): ?>
                <tr>
                   <th scope="row"><?= $item['id'] ?></th>
                   <td><?= $item['name'] ?></td>
-                  <td><?= $item['price'] ?></td>
-                  <td><?= substr($item['mota'], 0, 80). '...' ?></td>
-                  <td><?= $item['datecreated'] ?></td>
+                  <td><?= $item['created_at'] ?></td>
                   <td><button class="btn btn-primary">Sửa</button><button style="margin-left: 5px;" class="btn btn-danger">Xoá</button></td>
                </tr>
             <?php endforeach; ?>

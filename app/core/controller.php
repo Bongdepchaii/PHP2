@@ -34,6 +34,6 @@ class Controller
         /**
          * sau nay co the load theo view errors
          */
-        echo "controller Not Found - ' . $message. </h1>";
+        echo " controller Not Found - ' . $message. </h1>";
     }
 }
