@@ -11,47 +11,28 @@
          <div class="collapse navbar-collapse" id="navbarNav">
            <ul class="navbar-nav">
                <li class="nav-item active">
-                  <a class="nav-link" href="/product/index">Sản phẩm</a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="/category/index">Danh mục</a>
-               </li>
-                              <li class="nav-item">
-                  <a class="nav-link" href="/trademark/index">Thương hiệu</a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="/user/index">Người dùng</a>
+                  <a class="nav-link" href="/login">Đăng nhập</a>
                </li>
             </ul>
          </div>
       </nav>
    </div>
    <div class="container mt-5 main">
-      <a href="/category/add" class="btn btn-outline-dark mb-4 form-control p-2">Thêm sản phẩm</a>
-      <table class="table">
-         <thead>
-            <tr>
-               <th scope="col">ID</th>
-               <th scope="col">Tên sản phẩm</th>
-               <th scope="col">Giá</th>
-               <th scope="col">Mô tả</th>
-               <th scope="col">Ngày tạo</th>
-               <th scope="col">Hành động</th>
-            </tr>
-         </thead>
-         <tbody>
-            <?php foreach ($products as $item): ?>
-               <tr>
-                  <th scope="row"><?= $item['id'] ?></th>
-                  <td><?= $item['name'] ?></td>
-                  <td><?= $item['price'] ?></td>
-                  <td><?= substr($item['mota'], 0, 80). '...' ?></td>
-                  <td><?= $item['datecreated'] ?></td>
-                  <td><button class="btn btn-primary">Sửa</button><button style="margin-left: 5px;" class="btn btn-danger">Xoá</button></td>
-               </tr>
-            <?php endforeach; ?>
-         </tbody>
-      </table>
+      <div class="row">
+         <?php foreach ($products as $product): ?>
+         <div class="col-md-3 mb-4">
+            <div class="card">
+               <img src="<?= $product['img'] ?>" class="card-img-top" alt="<?= $product['name'] ?>">
+               <div class="card-body">
+                  <h5 class="card-title"><?= $product['name'] ?></h5>
+                  <p class="card-text"><?= substr($product['mota'], 0, 80) . '...' ?></p>
+                  <p class="card-text"><small class="text-muted"><?= $product['price'] ?></small></p>
+               </div>
+            </div>            
+         </div>
+         <?php endforeach; ?>
+      </div>
+   </div>
    </div>
 
 
