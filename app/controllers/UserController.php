@@ -13,4 +13,10 @@ class UserController extends Controller
             'user' => $data,
         ]);
     }
+
+    public function delete($id) {
+        $user = $this->model('user');
+        $user->delete($id);
+        header("Location: /user");
+    }
 }

@@ -7,14 +7,21 @@ define('CONTROLLER_PATH', APP_PATH . '/controllers');
 define('MODEL_PATH', APP_PATH . '/models');
 
 // autoload composer
-$vendorAutoLoad = BASE_PATH . '/vendor/autoload.php';
-if (file_exists($vendorAutoLoad)) {
-    require_once $vendorAutoLoad;
+$vendorAutoload = APP_PATH . "/vendor/autoload.php";
+// var_dump($vendorAutoload);
+if (file_exists($vendorAutoload)) {
+    // echo "exist here";
+    require_once $vendorAutoload;
+} else {
+    echo "not working";
 }
 
 if (class_exists(\Dotenv\Dotenv::class)) {
-    \Dotenv\Dotenv::createImmutable(BASE_PATH)->safeLoad();
+    \Dotenv\Dotenv::createImmutable(APP_PATH)->safeLoad();
 }
+
+// var_dump(APP_PATH);
+// var_dump($_ENV);
 
 spl_autoload_register(function (string $class): void {
     $paths = [

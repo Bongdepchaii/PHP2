@@ -1,0 +1,4 @@
+teach
+/vendor/
+app/vendor
+app/.env

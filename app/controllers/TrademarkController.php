@@ -1,16 +1,22 @@
 <?php
-class CategoryController extends Controller
+class TrademarkController extends Controller
 {
     public function index()
     {
-        $category = $this->model('trademark'); //
+        $trademark = $this->model('trademark'); //
         // $product = new Product();
-        $data = $category->all();
+        $data = $trademark->all();
         // var_dump($data);
         $title = "Quản lý thương hiệu";
         $this->view("trademarks/index", [
             'title' => $title,
             'trademark' => $data,
         ]);
+    }
+
+        public function delete($id){
+        $trademark = $this->model(name: 'trademark');
+        $trademark->delete($id);
+        header("Location: /trademark/index");
     }
 }

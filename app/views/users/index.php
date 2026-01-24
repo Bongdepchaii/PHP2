@@ -6,27 +6,27 @@
 </head>
 
 <body>
-    <div class="container mt-3 header">
-        <nav class="navbar navbar-expand-lg navbar-light">
-            <a class="navbar-brand" href="/home/index">Home</a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/products/index">Sản phẩm</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/categorys/index">Danh mục</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/trademarks/index">Thương hiệu</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/users/index">Người dùng</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
+   <div class="container mt-3 header">
+      <nav class="navbar navbar-expand-lg navbar-light">
+         <a class="navbar-brand" href="/home/index">Home</a>
+         <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+               <li class="nav-item active">
+                  <a class="nav-link" href="/product">Sản phẩm</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="/category">Danh mục</a>
+               </li>
+                              <li class="nav-item">
+                  <a class="nav-link" href="/trademark">Thương hiệu</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="/user">Người dùng</a>
+               </li>
+            </ul>
+         </div>
+      </nav>
+   </div>
     <div class="container mt-5 main">
         <a href="/users/add" class="btn btn-outline-dark mb-4 form-control p-2">Tạo người dùng</a>
         <table class="table">

@@ -11,23 +11,23 @@
          <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                <li class="nav-item active">
-                  <a class="nav-link" href="/products/index">Sản phẩm</a>
+                  <a class="nav-link" href="/product">Sản phẩm</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link" href="/categorys/index">Danh mục</a>
+                  <a class="nav-link" href="/category">Danh mục</a>
                </li>
                               <li class="nav-item">
-                  <a class="nav-link" href="/trademarks/index">Thương hiệu</a>
+                  <a class="nav-link" href="/trademark">Thương hiệu</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link" href="/users/index">Người dùng</a>
+                  <a class="nav-link" href="/user">Người dùng</a>
                </li>
             </ul>
          </div>
       </nav>
    </div>
    <div class="container mt-5 main">
-      <a href="/category/add" class="btn btn-outline-dark mb-4 form-control p-2">Thêm sản phẩm</a>
+      <a href="/product/add" class="btn btn-outline-dark mb-4 form-control p-2">Thêm sản phẩm</a>
       <table class="table">
          <thead>
             <tr>
@@ -46,8 +46,8 @@
                   <td><?= $item['name'] ?></td>
                   <td><?= $item['price'] ?></td>
                   <td><?= substr($item['mota'], 0, 80). '...' ?></td>
-                  <td><?= $item['datecreated'] ?></td>
-                  <td><button class="btn btn-primary">Sửa</button><button style="margin-left: 5px;" class="btn btn-danger">Xoá</button></td>
+                  <td><?= $item['created_at'] ?></td>
+                  <td><a href="/product/edit/<?= $item['id'] ?>" class="btn btn-primary">Sửa</a><a onclick="return confirm('Bạn chắc chắn có muốn xoá sản phẩm này?')" href="/product/delete/<?= $item['id'] ?>"  style="margin-left: 5px;" class="btn btn-danger">Xoá</a></td>
                </tr>
             <?php endforeach; ?>
          </tbody>

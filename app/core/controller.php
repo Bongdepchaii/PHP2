@@ -1,4 +1,5 @@
 <?php
+use eftec\bladeone\BladeOne;
 class Controller
 {
     public function view($view, $data)

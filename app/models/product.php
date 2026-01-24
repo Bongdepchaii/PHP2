@@ -4,7 +4,7 @@ class Product extends Model
     private $table = 'product';
     public function all()
     {
-        $sql = "Select * from " . $this->table;
+        $sql = "Select * from " . $this->table . " order by created_at desc ";
         $conn = $this->connect();
         $stmt = $conn->prepare($sql);
         $stmt->execute([]);

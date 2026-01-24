@@ -1,7 +1,7 @@
 <?php
-class Category extends Model
+class Trademark extends Model
 {
-    private $table = "category";
+    private $table = "trademark";
     public function all()
     {
         $sql = "select * from $this->table";

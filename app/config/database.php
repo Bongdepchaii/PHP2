@@ -1,9 +1,9 @@
 <?php 
     return [
         // 'host' => 'localhost',
-        'host' => '127.0.0.1',
-        'database' => 'php2',
-        'username' => 'root',
-        'password' => ''
+        'host' => $_ENV['HOST'],
+        'database' => $_ENV['DB'],
+        'username' => $_ENV['USER'],
+        'password' => $_ENV['PASS']
     ]
 ?>
