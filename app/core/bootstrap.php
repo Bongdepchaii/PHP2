@@ -7,7 +7,7 @@ define('CONTROLLER_PATH', APP_PATH . '/controllers');
 define('MODEL_PATH', APP_PATH . '/models');
 
 // autoload composer
-$vendorAutoload = APP_PATH . "/vendor/autoload.php";
+$vendorAutoload = BASE_PATH . "/vendor/autoload.php";
 // var_dump($vendorAutoload);
 if (file_exists($vendorAutoload)) {
     // echo "exist here";

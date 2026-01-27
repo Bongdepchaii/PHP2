@@ -1,15 +1,51 @@
 <?php
-use eftec\bladeone\BladeOne;
+
+use Jenssegers\Blade\Blade;
+
 class Controller
 {
-    public function view($view, $data)
+    public function view(string $view, array $data = []): void
     {
-        $viewFile = VIEW_PATH . "/$view" . ".php";
-        if (!file_exists($viewFile)) {
-            throw new Exception("view file not found");
+        // Chuẩn hoá về dạng dot: "home/index" -> "home.index"
+        $normalizedView = $this->normalizeViewName($view);
+
+        // Map sang đường dẫn file để kiểm tra tồn tại
+        $viewPath = str_replace('.', '/', $normalizedView);
+
+        $candidates = [
+            VIEW_PATH . '/' . $viewPath . '.blade.php',
+            VIEW_PATH . '/' . $viewPath . '.blade', // nếu bạn thật sự có kiểu file này
+        ];
+
+        $found = null;
+        foreach ($candidates as $file) {
+            if (is_file($file)) {
+                $found = $file;
+                break;
+            }
         }
-        extract($data, EXTR_SKIP);
-        require $viewFile;
+
+        if (!$found) {
+            throw new RuntimeException("Blade view not found: {$view} (resolved: {$viewPath})");
+        }
+
+        $cachePath = BASE_PATH . '/storage/cache';
+        if (!is_dir($cachePath) && !mkdir($cachePath, 0775, true) && !is_dir($cachePath)) {
+            throw new RuntimeException("Cannot create cache directory: {$cachePath}");
+        }
+
+        // Quan trọng: truyền THƯ MỤC views, không truyền $viewPath
+        $blade = new Blade(VIEW_PATH, $cachePath);
+
+        echo $blade->render($normalizedView, $data);
+    }
+
+    protected function normalizeViewName(string $view): string
+    {
+        $view = trim($view);
+        $view = str_replace(['\\', '/'], '.', $view);
+        $view = preg_replace('/\.+/', '.', $view);
+        return trim($view, '.');
     }
     // product ->
     public function model($name)
@@ -35,6 +71,6 @@ class Controller
         /**
          * sau nay co the load theo view errors
          */
-        echo " controller Not Found - ' . $message. </h1>";
+        echo "controller Not Found - ' . $message. </h1>";
     }
 }

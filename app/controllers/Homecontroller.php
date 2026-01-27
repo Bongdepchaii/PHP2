@@ -8,7 +8,7 @@ class HomeController extends Controller
         $data = $product->all();
         // var_dump($data);
         $title = "Trang chủ";
-        $this->view("home/index.blade", [
+        $this->view("home/index", [
             'title' => $title,
             'products' => $data,
         ]);
