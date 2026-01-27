@@ -3,14 +3,14 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $product = $this->model('product'); //
+        $products = $this->model('product'); //
         // $product = new Product();
-        $data = $product->all();
+        $data = $products->all();
         // var_dump($data);
         $title = "Trang chủ";
         $this->view("home/index", [
             'title' => $title,
-            'products' => $data,
+            'category' => $data,
         ]);
     }
 }

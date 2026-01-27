@@ -28,4 +28,4 @@
             <button class="btn btn-primary w-100 mt-3">Áp dụng</button>
           </div>
         </div>
-      </aside>
+      </aside><?php /**PATH C:\xampp\htdocs\PHP2-NEW\PHP2\app\views/layouts/includes/slidebar.blade.php ENDPATH**/ ?>

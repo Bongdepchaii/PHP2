@@ -1,62 +1,31 @@
-<html>
-<head>
-   <title><?= $title ?></title>
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" ...>
-</head>
-
-<body>
-   <div class="container mt-3 header">
-      <nav class="navbar navbar-expand-lg navbar-light">
-         <a class="navbar-brand" href="/home/index">Home</a>
-         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-               <li class="nav-item active">
-                  <a class="nav-link" href="/product">Sản phẩm</a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="/category">Danh mục</a>
-               </li>
-                              <li class="nav-item">
-                  <a class="nav-link" href="/trademark">Thương hiệu</a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="/user">Người dùng</a>
-               </li>
-            </ul>
-         </div>
-      </nav>
-   </div>
-   <div class="container mt-5 main">
-      <a href="/category/add" class="btn btn-outline-dark mb-4 form-control p-2">Tạo danh mục</a>
-      <table class="table">
-         <thead>
+@extends('layouts.index')
+@section('title', 'Quản lý danh mục')
+@section('content')
+    <a href="/category/add" class="btn btn-sm btn-light border text-succes mb-3">Thêm danh mục</a>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Tên</th>
+            <th>Ngày tạo</th>
+            <th>Act</th>
+        </tr>
+        @foreach ($category as $item)
             <tr>
-               <th scope="col">ID</th>
-               <th scope="col">Tên sản phẩm</th>
-               <th scope="col">Ngày tạo</th>
-               <th scope="col">Hành động</th>
+                <td>{{ $item['id'] }}</td>
+                <td>{{ $item['name'] }}</td>
+                <td>{{ $item['created_at'] }}</td>
+                <td>
+                    <a href="/category/edit/{{ $item['id'] }}" class="btn btn-sm btn-light border text-primary">Sửa</a>
+                    <a href="/category/delete/{{ $item['id'] }}" class="btn btn-sm btn-light border text-danger">Xoá</a>
+                </td>
             </tr>
-         </thead>
-         <tbody>
-            <?php foreach ($category as $item): ?>
-               <tr>
-                  <th scope="row"><?= $item['id'] ?></th>
-                  <td><?= $item['name'] ?></td>
-                  <td><?= $item['created_at'] ?></td>
-                  <td><button class="btn btn-primary">Sửa</button><button style="margin-left: 5px;" class="btn btn-danger">Xoá</button></td>
-               </tr>
-            <?php endforeach; ?>
-         </tbody>
-      </table>
-   </div>
+        @endforeach
 
+    </table>
 
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
-
-</html>
-<style>
-   div.main {
-      max-width: 1100px;
-   }
-</style>
+@endsection
+@push('scripts')
+<script>
+    // alert("hello world")
+</script>
+@endpush

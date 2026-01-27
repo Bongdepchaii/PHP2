@@ -8,4 +8,4 @@
         <a class="text-decoration-none" href="#">Hỗ trợ</a>
       </div>
     </div>
-  </footer>
+  </footer><?php /**PATH C:\xampp\htdocs\PHP2-NEW\PHP2\app\views/layouts/includes/footer.blade.php ENDPATH**/ ?>

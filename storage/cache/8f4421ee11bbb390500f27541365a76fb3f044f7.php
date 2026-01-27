@@ -30,4 +30,4 @@
         <a href="/login" class="btn btn-danger ms-2">Giỏ hàng</a>
       </div>
     </div>
-  </nav>
+  </nav><?php /**PATH C:\xampp\htdocs\PHP2-NEW\PHP2\app\views/layouts/includes/header.blade.php ENDPATH**/ ?>

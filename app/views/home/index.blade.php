@@ -1,27 +1,29 @@
 @extends('layouts.index')
-@section('title', 'danh mục')
+@section('title', 'Quản lý danh mục')
 @section('content')
-    <a href="/category/add" class="btn btn-sm btn-light border text-succes">Them danh muc</a>
-    <table class="table">
-        <tr>
-            <th> id </th>
-            <th> name </th>
-            <th> image </th>
-            <th>action</th>
-        </tr>
-        @foreach ($products as $item)
-            <tr>
-                <td>{{ $item['id'] }}</td>
-                <td>{{ $item['name'] }}</td>
-                <td><img src="{{ $item['img'] }}" alt="{{ $item['name'] }}"></td>
-                <td>
-                    <a href="/danhmuc/delete/{{ $item['id'] }}" class="btn btn-sm btn-light border text-danger">Delete
-                    </a>
-                </td>
-            </tr>
-        @endforeach
 
-    </table>
+<div class="row g-3">
+    <!-- Product Card -->
+             @foreach ($category as $item)
+    <div class="col-12 col-sm-6 col-xl-4">
+        <div class="card h-100 shadow-sm">
+            <img src="https://picsum.photos/600/400?random=1" class="card-img-top" alt="Product">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title mb-1"></h5>
+                    <span class="badge text-bg-primary">Máy ảnh</span>
+                </div>
+                <p class="card-text text-muted small mb-2">{{ substr($item['mota'], 0, 80) . "..." }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="fw-semibold">{{ $item['price'] }}</div>
+                    <a href="#" class="btn btn-sm btn-outline-primary">Xem</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+</div>
+
 @endsection
 @push('scripts')
 <script>
