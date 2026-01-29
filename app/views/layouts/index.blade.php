@@ -27,18 +27,6 @@
 
         </div>
     </main>
-
-    <!-- Footer -->
-    <!-- <footer class="border-top bg-white">
-        <div class="container py-3 d-flex flex-column flex-sm-row justify-content-between align-items-center">
-            <div class="text-muted small">© 2026 MyShop. All rights reserved.</div>
-            <div class="d-flex gap-3">
-                <a class="text-decoration-none" href="#">Privacy</a>
-                <a class="text-decoration-none" href="#">Terms</a>
-                <a class="text-decoration-none" href="#">Support</a>
-            </div>
-        </div>
-    </footer> -->
     @include('layouts.includes.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -59,7 +59,8 @@ class Controller
 
     public function redirect($path)
     {
-        $base = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+        $base = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/\\');
+        $base = str_replace('\\', '/', $base);
         $target = $base . '/' . ltrim($path, '/');
         header('Location: ' . $target);
         exit;

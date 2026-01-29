@@ -1,16 +1,16 @@
 @extends('layouts.index')
-@section('title', 'Quản lý danh mục')
+@section('title', 'Trang chủ')
 @section('content')
 
 <div class="row g-3">
     <!-- Product Card -->
-        @foreach ($category as $item)
+        @foreach ($products as $item)
     <div class="col-12 col-sm-6 col-xl-4">
         <div class="card h-100 shadow-sm">
             <img src="https://picsum.photos/600/400?random=1" class="card-img-top" alt="Product">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
-                    <h5 class="card-title mb-1"></h5>
+                    <h5 class="card-title mb-1">{{ $item['name'] }}</h5>
                     <span class="badge text-bg-primary">Máy ảnh</span>
                 </div>
                 <p class="card-text text-muted small mb-2">{{ substr($item['mota'], 0, 80) . "..." }}</p>

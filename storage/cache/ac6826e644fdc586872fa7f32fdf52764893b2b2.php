@@ -10,18 +10,18 @@
     <meta name="author" content="flexilecode" />
     <!--! The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags !-->
     <!--! BEGIN: Apps Title-->
-    <title>@yield('title')</title>
+    <title><?php echo $__env->yieldContent('title'); ?></title>
     <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/daterangepicker.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css" />
-    <!-- @stack('styles') -->
+    <!-- <?php echo $__env->yieldPushContent('styles'); ?> -->
 </head>
 
 <body>
-    @include('layouts.includes.slidebar_admin')
-    @include('layouts.includes.header_admin')
+    <?php echo $__env->make('layouts.includes.slidebar_admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <?php echo $__env->make('layouts.includes.header_admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <main class="nxl-container">
         <div class="nxl-content">
             <!-- [ page-header ] start -->
@@ -112,18 +112,18 @@
             </div>
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
-            @yield('content')
+            <?php echo $__env->yieldContent('content'); ?>
             <!-- [ Main Content ] end -->
         </div>
         <!-- [ Footer ] start -->
-        @include('layouts.includes.footer_admin')
+        <?php echo $__env->make('layouts.includes.footer_admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <!-- [ Footer ] end -->
     </main>
     <!--! ================================================================ !-->
     <!--! [End] Main Content !-->
     <!--! ================================================================ !-->
-    @include('layouts.includes.setting_theme_admin')
-    @stack('modals')
+    <?php echo $__env->make('layouts.includes.setting_theme_admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <?php echo $__env->yieldPushContent('modals'); ?>
     <script src="/assets/vendors/js/vendors.min.js"></script>
     <script src="/assets/vendors/js/daterangepicker.min.js"></script>
     <script src="/assets/vendors/js/apexcharts.min.js"></script>
@@ -131,7 +131,7 @@
     <script src="/assets/js/common-init.min.js"></script>
     <script src="/assets/js/dashboard-init.min.js"></script>
     <script src="/assets/js/theme-customizer-init.min.js"></script>
-    @stack('scripts')
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 
-</html>
+</html><?php /**PATH C:\xampp\htdocs\PHP2-NEW\PHP2\app\views/layouts/index_admin.blade.php ENDPATH**/ ?>

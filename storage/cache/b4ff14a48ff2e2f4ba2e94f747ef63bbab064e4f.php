@@ -1,16 +1,16 @@
 
-<?php $__env->startSection('title', 'Quản lý danh mục'); ?>
+<?php $__env->startSection('title', 'Trang chủ'); ?>
 <?php $__env->startSection('content'); ?>
 
 <div class="row g-3">
     <!-- Product Card -->
-             <?php $__currentLoopData = $category; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <div class="col-12 col-sm-6 col-xl-4">
         <div class="card h-100 shadow-sm">
             <img src="https://picsum.photos/600/400?random=1" class="card-img-top" alt="Product">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
-                    <h5 class="card-title mb-1"></h5>
+                    <h5 class="card-title mb-1"><?php echo e($item['name']); ?></h5>
                     <span class="badge text-bg-primary">Máy ảnh</span>
                 </div>
                 <p class="card-text text-muted small mb-2"><?php echo e(substr($item['mota'], 0, 80) . "..."); ?></p>

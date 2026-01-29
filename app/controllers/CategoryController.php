@@ -18,33 +18,29 @@ class CategoryController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = trim($_POST['name']);
-            var_dump($_POST);
-            var_dump($name);
-
             if (!empty($name)) {
-                $colorModel = $this->model('category');
-                $colorModel->create(array(
-                    'name' => $name
+                $categoryModel = $this->model('category');
+                $categoryModel->create(array(
+                    'name' => $name,
+                    'created_at' => date('Y-m-d H:i:s')
                 ));
-                $this->redirect('/category');
+                $_SESSION['success'] = "Thêm danh mục thành công";
             }
         }
         $this->redirect('/category');
     }
 
+    public function edit() {
+        $this->redirect('/category');
+    }
+
     public function update($id)
     {
-        $color = $this->model('category');
-        $data = $color->find($id);
-        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $this->view("category/edit", [
-                'category' => $data
-            ]);
-        } else {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = trim($_POST['name']);
             if (!empty($name)) {
-                $colorModel = $this->model('category');
-                $isSuccess = $colorModel->update(
+                $categoryModel = $this->model('category');
+                $isSuccess = $categoryModel->update(
                     array(
                         'name' => $name,
                     ),
@@ -53,9 +49,9 @@ class CategoryController extends Controller
                 if ($isSuccess) {
                     $_SESSION['success'] = "Cập nhật thành công";
                 }
-                $this->redirect('/category');
             }
         }
+        $this->redirect('/category');
     }
 
     public function delete($id){

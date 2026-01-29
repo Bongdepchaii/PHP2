@@ -24,12 +24,12 @@ class Category extends Model
 
     public function create($data = [])
     {
-        $sql = "insert into $this->table ('name', 'created_at') values(:name, :created_at)";
+        $sql = "insert into $this->table (name, created_at) values (:name, :created_at)";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
             'name' => $data['name'],
-            'created_at' => $data['created_at'],
+            'created_at' => $data['created_at']
         ]);
     }
 
