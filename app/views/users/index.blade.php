@@ -1,73 +1,131 @@
-<html>
+@extends('layouts.index_admin')
+@section('title', 'Quản lý người dùng')
+@section('content')
 
-<head>
-    <title><?= $title ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" ...>
-</head>
-
-<body>
-   <div class="container mt-3 header">
-      <nav class="navbar navbar-expand-lg navbar-light">
-         <a class="navbar-brand" href="/home/index">Home</a>
-         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-               <li class="nav-item active">
-                  <a class="nav-link" href="/product">Sản phẩm</a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="/category">Danh mục</a>
-               </li>
-                              <li class="nav-item">
-                  <a class="nav-link" href="/trademark">Thương hiệu</a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="/user">Người dùng</a>
-               </li>
-            </ul>
-         </div>
-      </nav>
-   </div>
-    <div class="container mt-5 main">
-        <a href="/users/add" class="btn btn-outline-dark mb-4 form-control p-2">Tạo người dùng</a>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Tên</th>
-                    <th scope="col">Giới tính</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Tuổi</th>
-                    <th scope="col">Địa chỉ</th>
-                    <th scope="col">Ngày tạo</th>
-                    <th scope="col">Quyền</th>
-                    <th scope="col">Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($user as $item): ?>
-                    <tr>
-                        <th scope="row"><?= $item['id'] ?></th>
-                        <td><?= $item['name'] ?></td>
-                        <td><?= $item['sex'] ?></td>
-                        <td><?= $item['email'] ?></td>
-                        <td><?= $item['age'] ?></td>
-                        <td><?= $item['address'] ?></td>
-                        <td><?= $item['created_at'] ?></td>
-                        <td><?= $item['role'] ?></td>
-                        <td><button class="btn btn-primary">Sửa</button><button style="margin-left: 5px;" class="btn btn-danger">Xoá</button></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card stretch stretch-full">
+            <div class="card-header border-bottom border-dashed d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="card-title mb-1">Danh sách người dùng</h5>
+                    <span class="fs-12 text-muted">Quản lý tài khoản và phân quyền truy cập</span>
+                </div>
+                <a href="/users/add" class="btn btn-primary btn-sm">
+                    <i class="feather-user-plus me-1"></i> Tạo người dùng
+                </a>
+            </div>
+            <div class="card-body custom-card-action p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="text-center" style="width: 50px;">ID</th>
+                                <th scope="col" style="min-width: 250px;">Thông tin cá nhân</th>
+                                <th scope="col">Liên hệ</th>
+                                <th scope="col">Tuổi & Giới tính</th>
+                                <th scope="col">Vai trò</th>
+                                <th scope="col">Ngày tham gia</th>
+                                <th scope="col" class="text-end" style="min-width: 100px;">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($user as $item)
+                            <tr class="transition-all hover-shadow-sm">
+                                <td class="text-center text-muted fw-semibold">#{{ $item['id'] }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-image avatar-md me-3">
+                                            <img src="https://ui-avatars.com/api/?name={{ urlencode($item['name']) }}&background=random&color=fff" alt="" class="img-fluid rounded-circle">
+                                        </div>
+                                        <div>
+                                            <a href="#" class="fw-bold text-dark mb-0 text-decoration-none">{{ $item['name'] }}</a>
+                                            <div class="fs-12 text-muted">{{ $item['address'] ?? 'Chưa cập nhật địa chỉ' }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="feather-mail text-muted me-2 fs-12"></i>
+                                        <span class="text-body">{{ $item['email'] }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-light text-dark border">{{ $item['age'] }} tuổi</span>
+                                        @if(strtolower($item['sex'] ?? '') == 'nam' || strtolower($item['sex'] ?? '') == 'male')
+                                            <span class="badge bg-soft-primary text-primary"><i class="feather-arrow-up-right me-1"></i> Nam</span>
+                                        @elseif(strtolower($item['sex'] ?? '') == 'nữ' || strtolower($item['sex'] ?? '') == 'female')
+                                            <span class="badge bg-soft-danger text-danger"><i class="feather-arrow-down-left me-1"></i> Nữ</span>
+                                        @else
+                                            <span class="badge bg-light text-muted">{{ $item['sex'] }}</span>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td>
+                                    @if(strtolower($item['role'] ?? '') == 'admin')
+                                        <span class="badge bg-soft-success text-success border border-success-subtle">Administrator</span>
+                                    @else
+                                        <span class="badge bg-soft-secondary text-secondary border border-secondary-subtle">User</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="fs-13 text-muted" data-bs-toggle="tooltip" title="{{ $item['created_at'] }}">
+                                        {{ date('d/m/Y', strtotime($item['created_at'])) }}
+                                    </div>
+                                </td>
+                                <td class="text-end">
+                                    <div class="dropdown">
+                                        <a href="javascript:void(0)" class="avatar-text avatar-md" data-bs-toggle="dropdown" data-bs-offset="0,10" data-bs-auto-close="outside">
+                                            <i class="feather-more-horizontal"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item" href="/users/edit/{{ $item['id'] }}">
+                                                    <i class="feather-edit-3 me-3"></i>Chỉnh sửa
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="javascript:void(0)">
+                                                    <i class="feather-eye me-3"></i>Xem chi tiết
+                                                </a>
+                                            </li>
+                                            <li class="dropdown-divider"></li>
+                                            <li>
+                                                <a class="dropdown-item text-danger" href="/users/delete/{{ $item['id'] }}" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?');">
+                                                    <i class="feather-trash-2 me-3"></i>Xóa tài khoản
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                            @if(empty($user))
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <div class="text-center">
+                                        <i class="feather-users fs-1 display-6 d-block mb-3 opacity-50"></i>
+                                        <h6 class="text-muted">Chưa có người dùng nào</h6>
+                                        <a href="/users/add" class="btn btn-sm btn-primary mt-2">Tạo người dùng mới</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer border-top-0">
+                <!-- Pagination could go here -->
+            </div>
+        </div>
     </div>
+</div>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
-
-</html>
 <style>
-    div.main {
-        max-width: 1100px;
+    .hover-shadow-sm:hover {
+        background-color: #f8f9fa;
     }
 </style>
+
+@endsection

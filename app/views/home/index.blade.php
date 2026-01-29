@@ -4,7 +4,7 @@
 
 <div class="row g-3">
     <!-- Product Card -->
-             @foreach ($category as $item)
+        @foreach ($category as $item)
     <div class="col-12 col-sm-6 col-xl-4">
         <div class="card h-100 shadow-sm">
             <img src="https://picsum.photos/600/400?random=1" class="card-img-top" alt="Product">

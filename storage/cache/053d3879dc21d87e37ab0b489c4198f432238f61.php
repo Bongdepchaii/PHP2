@@ -1,27 +1,29 @@
 
-<?php $__env->startSection('title', 'danh mục'); ?>
+<?php $__env->startSection('title', 'Quản lý danh mục'); ?>
 <?php $__env->startSection('content'); ?>
-    <a href="/category/add" class="btn btn-sm btn-light border text-succes">Them danh muc</a>
-    <table class="table">
-        <tr>
-            <th> id </th>
-            <th> name </th>
-            <th> image </th>
-            <th>action</th>
-        </tr>
-        <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <tr>
-                <td><?php echo e($item['id']); ?></td>
-                <td><?php echo e($item['name']); ?></td>
-                <td><img src="<?php echo e($item['img']); ?>" alt="<?php echo e($item['name']); ?>"></td>
-                <td>
-                    <a href="/danhmuc/delete/<?php echo e($item['id']); ?>" class="btn btn-sm btn-light border text-danger">Delete
-                    </a>
-                </td>
-            </tr>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-    </table>
+<div class="row g-3">
+    <!-- Product Card -->
+             <?php $__currentLoopData = $category; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    <div class="col-12 col-sm-6 col-xl-4">
+        <div class="card h-100 shadow-sm">
+            <img src="https://picsum.photos/600/400?random=1" class="card-img-top" alt="Product">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title mb-1"></h5>
+                    <span class="badge text-bg-primary">Máy ảnh</span>
+                </div>
+                <p class="card-text text-muted small mb-2"><?php echo e(substr($item['mota'], 0, 80) . "..."); ?></p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="fw-semibold"><?php echo e($item['price']); ?></div>
+                    <a href="#" class="btn btn-sm btn-outline-primary">Xem</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+</div>
+
 <?php $__env->stopSection(); ?>
 <?php $__env->startPush('scripts'); ?>
 <script>

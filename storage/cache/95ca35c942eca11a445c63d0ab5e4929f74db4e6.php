@@ -1,23 +1,31 @@
 <aside class="col-12 col-lg-3">
         <div class="card shadow-sm">
-          <div class="card-header bg-white fw-semibold">Categories</div>
+          <div class="card-header bg-white fw-semibold">Thương hiệu</div>
           <div class="list-group list-group-flush">
             <a href="#" class="list-group-item list-group-item-action active">All</a>
-            <a href="#" class="list-group-item list-group-item-action">Phones</a>
-            <a href="#" class="list-group-item list-group-item-action">Laptops</a>
-            <a href="#" class="list-group-item list-group-item-action">Accessories</a>
-            <a href="#" class="list-group-item list-group-item-action">Gaming</a>
+            <a href="#" class="list-group-item list-group-item-action">Canon</a>
+            <a href="#" class="list-group-item list-group-item-action">Sony</a>
+            <a href="#" class="list-group-item list-group-item-action">Fujifilm</a>
+            <a href="#" class="list-group-item list-group-item-action">Panasonic</a>
+          </div>
+        </div>
+        <div class="card shadow-sm mt-3">
+          <div class="card-header bg-white fw-semibold">Danh mục</div>
+          <div class="list-group list-group-flush">
+            <a href="#" class="list-group-item list-group-item-action active">All</a>
+            <a href="#" class="list-group-item list-group-item-action">Máy ảnh</a>
+            <a href="#" class="list-group-item list-group-item-action">Phụ kiện</a>
           </div>
         </div>
 
         <div class="card shadow-sm mt-3">
           <div class="card-body">
-            <div class="fw-semibold mb-2">Price</div>
+            <div class="fw-semibold mb-2">Lọc giá</div>
             <div class="d-flex gap-2">
-              <input class="form-control" placeholder="Min" />
-              <input class="form-control" placeholder="Max" />
+              <input class="form-control" placeholder="Thấp" />
+              <input class="form-control" placeholder="Cao" />
             </div>
-            <button class="btn btn-primary w-100 mt-3">Apply</button>
+            <button class="btn btn-primary w-100 mt-3">Áp dụng</button>
           </div>
         </div>
       </aside><?php /**PATH C:\xampp\htdocs\PHP2\app\views/layouts/includes/slidebar.blade.php ENDPATH**/ ?>
