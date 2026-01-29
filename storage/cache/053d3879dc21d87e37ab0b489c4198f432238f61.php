@@ -4,7 +4,7 @@
 
 <div class="row g-3">
     <!-- Product Card -->
-             <?php $__currentLoopData = $category; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <?php $__currentLoopData = $category; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <div class="col-12 col-sm-6 col-xl-4">
         <div class="card h-100 shadow-sm">
             <img src="https://picsum.photos/600/400?random=1" class="card-img-top" alt="Product">
