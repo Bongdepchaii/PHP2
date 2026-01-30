@@ -1,33 +1,56 @@
- <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top shadow-sm">
     <div class="container">
-      <a class="navbar-brand fw-semibold" href="/">TBS</a>
+      <a href="/"><img src="https://thanhbui.click/wp-content/uploads/2025/09/tbs-removebg-preview.png" alt="" style="height: 70px;"></a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div id="nav" class="collapse navbar-collapse">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-              Quản lý
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/product">Sản phẩm</a></li>
-              <li><a class="dropdown-item" href="/category">Danh mục</a></li>
-              <li><a class="dropdown-item" href="/trademark">Thương hiệu</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="/user">Người dùng</a></li>
-            </ul>
-          </li>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         </ul>
 
-        <form class="d-flex" role="">
-          <input class="form-control me-2" type="search" placeholder="Aa" />
-          <button class="btn btn-outline-primary" type="submit">Tìm</button>
-        </form>
-        <a href="/login" class="btn btn-primary ms-3">Đăng nhập</a>
-        <a href="/login" class="btn btn-danger ms-2">Giỏ hàng</a>
+        <div class="d-flex align-items-center gap-3">
+            <form class="d-flex" role="search">
+              <input class="form-control form-control-sm me-2" type="search" placeholder="Tìm kiếm..." />
+              <button class="btn btn-outline-primary btn-sm" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+
+            @if(isset($_SESSION['user_id']))
+                @if($_SESSION['role'] == 'user')
+                    <a href="/cart" class="position-relative text-dark text-decoration-none me-2">
+                        <i class="fas fa-shopping-cart fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                            0
+                        </span>
+                    </a>
+                @endif
+                
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+                        <div class="avatar-image avatar-sm me-2">
+                             <img src="https://ui-avatars.com/api/?name={{ urlencode($_SESSION['user_name'] ?? 'User') }}&background=random" class="rounded-circle" style="width: 32px; height: 32px;">
+                        </div>
+                        <span class="fw-semibold small d-none d-md-block">{{ $_SESSION['user_name'] ?? 'User' }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/profile">Hồ sơ cá nhân</a></li>
+                        @if($_SESSION['role'] == 'admin')
+                        <li><a class="dropdown-item mt-2" href="/product">Quản lý sản phẩm</a></li>
+                        @endif
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="/auth/logout">Đăng xuất</a></li>
+                    </ul>
+                </div>
+            @else
+                <div class="d-flex gap-2">
+                    <a href="/auth/login" class="btn btn-outline-primary btn-sm fw-semibold">Đăng nhập</a>
+                    <a href="/auth/register" class="btn btn-primary btn-sm fw-semibold">Đăng ký</a>
+                </div>
+            @endif
+        </div>
       </div>
     </div>
   </nav>

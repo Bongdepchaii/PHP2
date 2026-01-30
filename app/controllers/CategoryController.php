@@ -30,10 +30,6 @@ class CategoryController extends Controller
         $this->redirect('/category');
     }
 
-    public function edit() {
-        $this->redirect('/category');
-    }
-
     public function update($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -57,6 +53,7 @@ class CategoryController extends Controller
     public function delete($id){
         $category = $this->model('category');
         $category->delete($id);
-        header("Location: /category/index");
+        $_SESSION['error'] = "Xóa danh mục thành công";
+        $this->redirect('/category');
     }
 }

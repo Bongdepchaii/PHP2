@@ -10,10 +10,11 @@
                     <h5 class="card-title mb-1">Danh sách người dùng</h5>
                     <span class="fs-12 text-muted">Quản lý tài khoản và phân quyền truy cập</span>
                 </div>
-                <a href="/users/add" class="btn btn-primary btn-sm">
+                <a href="javascript:void(0);" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAdd">
                     <i class="feather-user-plus me-1"></i> Tạo người dùng
                 </a>
             </div>
+            @include('layouts.includes.alert')
             <div class="card-body custom-card-action p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
@@ -80,7 +81,17 @@
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
-                                                <a class="dropdown-item" href="/users/edit/{{ $item['id'] }}">
+                                                <a class="dropdown-item" href="javascript:void(0);"
+                                                   data-bs-toggle="modal" 
+                                                   data-bs-target="#modalEdit"
+                                                   data-id="{{ $item['id'] }}"
+                                                   data-username="{{ $item['username'] }}"
+                                                   data-name="{{ $item['name'] }}"
+                                                   data-email="{{ $item['email'] }}"
+                                                   data-age="{{ $item['age'] }}"
+                                                   data-sex="{{ $item['sex'] }}"
+                                                   data-address="{{ $item['address'] }}"
+                                                   data-role="{{ $item['role'] }}">
                                                     <i class="feather-edit-3 me-3"></i>Chỉnh sửa
                                                 </a>
                                             </li>
@@ -106,7 +117,7 @@
                                     <div class="text-center">
                                         <i class="feather-users fs-1 display-6 d-block mb-3 opacity-50"></i>
                                         <h6 class="text-muted">Chưa có người dùng nào</h6>
-                                        <a href="/users/add" class="btn btn-sm btn-primary mt-2">Tạo người dùng mới</a>
+                                        <a href="javascript:void(0);" class="btn btn-sm btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalAdd">Tạo người dùng mới</a>
                                     </div>
                                 </td>
                             </tr>
@@ -129,3 +140,148 @@
 </style>
 
 @endsection
+
+@push('modals')
+<!-- Modal Add -->
+<div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="modalAddLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form action="/user/add" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAddLabel">Thêm người dùng mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tài khoản</label>
+                            <input type="text" class="form-control" name="username" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Họ tên</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Tuổi</label>
+                            <input type="number" class="form-control" name="age">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Giới tính</label>
+                            <select class="form-select" name="sex">
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Vai trò</label>
+                            <select class="form-select" name="role">
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Địa chỉ</label>
+                            <textarea class="form-control" name="address" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Thêm mới</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Edit -->
+<div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form id="formEdit" action="" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditLabel">Cập nhật người dùng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tài khoản</label>
+                            <input type="text" class="form-control" id="usernameEdit" name="username" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Mật khẩu (Để trống nếu không đổi)</label>
+                            <input type="password" class="form-control" name="password">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Họ tên</label>
+                            <input type="text" class="form-control" id="nameEdit" name="name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="emailEdit" name="email" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Tuổi</label>
+                            <input type="number" class="form-control" id="ageEdit" name="age">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Giới tính</label>
+                            <select class="form-select" id="sexEdit" name="sex">
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Vai trò</label>
+                            <select class="form-select" id="roleEdit" name="role">
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Địa chỉ</label>
+                            <textarea class="form-control" id="addressEdit" name="address" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@endpush
+
+@push('scripts')
+<script>
+    const modalEdit = document.getElementById('modalEdit');
+    modalEdit.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const id = button.getAttribute('data-id');
+        
+        // Update form action
+        const formEdit = modalEdit.querySelector('#formEdit');
+        formEdit.action = `/user/update/${id}`;
+        
+        // Fill fields
+        modalEdit.querySelector('#usernameEdit').value = button.getAttribute('data-username');
+        modalEdit.querySelector('#nameEdit').value = button.getAttribute('data-name');
+        modalEdit.querySelector('#emailEdit').value = button.getAttribute('data-email');
+        modalEdit.querySelector('#ageEdit').value = button.getAttribute('data-age');
+        modalEdit.querySelector('#sexEdit').value = button.getAttribute('data-sex');
+        modalEdit.querySelector('#roleEdit').value = button.getAttribute('data-role').toLowerCase();
+        modalEdit.querySelector('#addressEdit').value = button.getAttribute('data-address');
+    });
+</script>
+@endpush

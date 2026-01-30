@@ -4,24 +4,13 @@ class ColorController extends Controller
 {
     public function index()
     {
-        $colorModel = $this->model('Color');
-        $data = $colorModel->all();
+        $color = $this->model('color');
+        $data = $color->all();
         $title = "Quản lí màu sắc";
-        // $colorModel->update(
-        //     array(
-        //         'name' => 'test' . mt_rand(1, 100),
-        //     ),
-        //     1
-        // );
-        $this->view("color/index", [
+        $this->view("products/color", [
             'title' => $title,
             'colors' => $data
         ]);
-    }
-
-    public function create()
-    {
-        $this->view('color/add');
     }
 
     public function add()
@@ -32,8 +21,8 @@ class ColorController extends Controller
             var_dump($name);
 
             if (!empty($name)) {
-                $colorModel = $this->model('color');
-                $colorModel->create(array(
+                $color = $this->model('color');
+                $color->create(array(
                     'name' => $name
                 ));
                 $this->redirect('/color');
@@ -46,14 +35,14 @@ class ColorController extends Controller
         $color = $this->model('color');
         $data = $color->find($id);
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $this->view("color/edit", [
+            $this->view("products/color/edit", [
                 'color' => $data
             ]);
         } else {
             $name = trim($_POST['name']);
             if (!empty($name)) {
-                $colorModel = $this->model('color');
-                $isSuccess = $colorModel->update(
+                $color = $this->model('color');
+                $isSuccess = $color->update(
                     array(
                         'name' => $name,
                     ),

@@ -1,13 +1,21 @@
-<!-- <div class="alert alert-success alert-dismissible fade show" role="alert">
-  <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
+<?php if(isset($_SESSION['success'])): ?>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <?php echo e($_SESSION['success']); ?>
 
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<?php endif; ?>
+
+<?php if(isset($_SESSION['error'])): ?>
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div> --><?php /**PATH C:\xampp\htdocs\PHP2\app\views/layouts/includes/alert.blade.php ENDPATH**/ ?>
+   <?php echo e($_SESSION['error']); ?>
+
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<?php endif; ?>
+
+
+<?php
+unset($_SESSION['success']);
+unset($_SESSION['error']);
+?><?php /**PATH C:\xampp\htdocs\PHP2\app\views/layouts/includes/alert.blade.php ENDPATH**/ ?>

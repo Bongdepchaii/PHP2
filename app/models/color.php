@@ -1,7 +1,7 @@
 <?php
 class Color extends Model
 {
-    private $table = "colors";
+    private $table = "color";
     public function all()
     {
         $sql = "select * from $this->table";

@@ -16,7 +16,6 @@
 
     <!-- Main -->
     <main class="container py-4">
-            @include('layouts.includes.alert')
         <div class="row g-4">
             <!-- Sidebar Categories -->
             @include('layouts.includes.slidebar')

@@ -8,10 +8,8 @@
     <meta name="description" content="" />
     <meta name="keyword" content="" />
     <meta name="author" content="flexilecode" />
-    <!--! The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags !-->
-    <!--! BEGIN: Apps Title-->
     <title>@yield('title')</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/LogoTBS.png" />
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/daterangepicker.min.css" />

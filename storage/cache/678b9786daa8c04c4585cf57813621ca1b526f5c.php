@@ -4,10 +4,10 @@
     <nav class="nxl-navigation">
         <div class="navbar-wrapper">
             <div class="m-header">
-                <a href="index.html" class="b-brand">
+                <a href="/" class="b-brand">
                     <!-- ========   change your logo hear   ============ -->
                     <img src="https://thanhbui.click/wp-content/uploads/2025/09/tbs-removebg-preview.png" style="width: 100px;" alt="" class="logo logo-lg" />
-                    <img src="https://thanhbui.click/wp-content/uploads/2025/09/tbs-removebg-preview.png" style="width: 100px;" alt="" class="logo logo-sm" />
+                    <img src="https://thanhbui.click/wp-content/uploads/2025/09/tbs-removebg-preview.png" style="width: 50px;" alt="" class="logo logo-sm" />
                 </a>
             </div>
             <div class="navbar-content">
@@ -22,14 +22,12 @@
                         </a>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
-                        <a href="/product" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-shopping-cart"></i></span>
-                            <span class="nxl-mtext">Sản phẩm</span><span class="nxl-arrow"><i
-                                    class="feather-chevron-right"></i></span>
-                        </a>
+                        <div class="nxl-link">
+                            <a href="/product" class="nxl-micon"><i class="feather-shopping-cart"></i></a>
+                            <a href="/product" class="nxl-mtext">Sản phẩm</a><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </div>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="#!">Kích cỡ</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="#">Màu sắc</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="/color">Màu sắc</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">

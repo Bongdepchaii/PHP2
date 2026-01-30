@@ -27,8 +27,7 @@
                             <a href="/product" class="nxl-mtext">Sản phẩm</a><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </div>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="/product/size">Kích cỡ</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="/product/color">Màu sắc</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="/color">Màu sắc</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">

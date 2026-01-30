@@ -22,9 +22,20 @@ class User extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function findByEmail($email)
+    {
+        $sql = "select * from $this->table where email = :email";
+        $conn = $this->connect();
+        $stmt =  $conn->prepare($sql);
+        $stmt->execute([
+            'email' => $email
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function create($data = [])
     {
-        $sql = "insert into $this->table ('username', 'password', 'email', 'name', 'sex', 'age', 'address', 'created_at') values(:username, :password, :email, :name, :sex, :age, :address, :created_at)";
+        $sql = "insert into $this->table (username, password, email, name, sex, age, address, role, created_at) values(:username, :password, :email, :name, :sex, :age, :address, :role, :created_at)";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
@@ -32,19 +43,41 @@ class User extends Model
             'password' => $data['password'],
             'email' => $data['email'],
             'name' => $data['name'],
+            'sex' => $data['sex'],
+            'age' => $data['age'],
+            'address' => $data['address'],
+            'role' => $data['role'],
             'created_at' => $data['created_at'],
         ]);
     }
 
     public function update($data = [], $id) {
-        $sql = "update $this->table set name = :name, created_at = :created_at where id = :id";
+        $sql = "update $this->table set username = :username, email = :email, name = :name, sex = :sex, age = :age, address = :address, role = :role, created_at = :created_at";
+        if (!empty($data['password'])) {
+            $sql .= ", password = :password";
+        }
+        $sql .= " where id = :id";
+        
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
-        return $stmt->execute([
+        
+        $params = [
+            'username' => $data['username'],
+            'email' => $data['email'],
             'name' => $data['name'],
+            'sex' => $data['sex'],
+            'age' => $data['age'],
+            'address' => $data['address'],
+            'role' => $data['role'],
             'created_at' => $data['created_at'],
             'id' => $id
-        ]);
+        ];
+        
+        if (!empty($data['password'])) {
+            $params['password'] = $data['password'];
+        }
+        
+        return $stmt->execute($params);
     }
 
     public function delete($id) {

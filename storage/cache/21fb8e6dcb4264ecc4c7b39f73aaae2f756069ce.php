@@ -213,7 +213,7 @@
                                 <span>Cài đặt tài khoản</span>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="./auth-login-minimal.html" class="dropdown-item">
+                            <a href="/auth/logout" class="dropdown-item">
                                 <i class="feather-log-out"></i>
                                 <span>Đăng xuất</span>
                             </a>

@@ -4,7 +4,7 @@ class Trademark extends Model
     private $table = "trademark";
     public function all()
     {
-        $sql = "select * from $this->table";
+        $sql = "select * from $this->table order by id desc";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         $stmt->execute([]);
@@ -24,7 +24,7 @@ class Trademark extends Model
 
     public function create($data = [])
     {
-        $sql = "insert into $this->table ('name', 'img', 'created_at') values(:name, :img, :created_at)";
+        $sql = "insert into $this->table (name, img, created_at) values(:name, :img, :created_at)";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
