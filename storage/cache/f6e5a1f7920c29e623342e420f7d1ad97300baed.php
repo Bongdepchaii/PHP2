@@ -15,4 +15,4 @@
                 <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
             </div>
         </footer> -->
-        <!-- [ Footer ] end -->
+        <!-- [ Footer ] end --><?php /**PATH C:\xampp\htdocs\lab2-30-1-26\PHP2\app\views/layouts/includes/footer_admin.blade.php ENDPATH**/ ?>

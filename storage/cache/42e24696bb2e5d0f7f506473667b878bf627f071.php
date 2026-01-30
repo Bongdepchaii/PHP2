@@ -1,6 +1,6 @@
-@extends('layouts.index_admin')
-@section('title', 'Quản lý thương hiệu')
-@section('content')
+
+<?php $__env->startSection('title', 'Quản lý thương hiệu'); ?>
+<?php $__env->startSection('content'); ?>
 
 <div class="row">
     <div class="col-lg-12">
@@ -11,7 +11,7 @@
                     <i class="feather-plus me-1"></i> Thêm thương hiệu
                 </a>
             </div>
-            @include('layouts.includes.alert')
+            <?php echo $__env->make('layouts.includes.alert', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
             <div class="card-body custom-card-action p-0">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
@@ -25,18 +25,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($trademark as $item)
+                            <?php $__currentLoopData = $trademark; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                <td class="text-center text-muted fw-semibold">{{ $item['id'] }}</td>
-                                <td class="fw-bold text-dark">{{ $item['name'] }}</td>
+                                <td class="text-center text-muted fw-semibold"><?php echo e($item['id']); ?></td>
+                                <td class="fw-bold text-dark"><?php echo e($item['name']); ?></td>
                                 <td>
                                     <div class="avatar-image avatar-lg">
-                                        <img src="/app/images/img/{{ $item['img'] }}" alt="{{ $item['name'] }}" class="img-fluid rounded border p-1 bg-white" style="object-fit: contain;">
+                                        <img src="/app/images/img/<?php echo e($item['img']); ?>" alt="<?php echo e($item['name']); ?>" class="img-fluid rounded border p-1 bg-white" style="object-fit: contain;">
                                     </div>
                                 </td>
                                 <td>
                                     <span class="badge bg-light text-dark border">
-                                        {{ date('d/m/Y', strtotime($item['created_at'])) }}
+                                        <?php echo e(date('d/m/Y', strtotime($item['created_at']))); ?>
+
                                     </span>
                                 </td>
                                 <td class="text-end">
@@ -45,26 +46,26 @@
                                            class="avatar-text avatar-md" 
                                            data-bs-toggle="modal" 
                                            data-bs-target="#modalEdit"
-                                           data-id="{{ $item['id'] }}"
-                                           data-name="{{ $item['name'] }}"
+                                           data-id="<?php echo e($item['id']); ?>"
+                                           data-name="<?php echo e($item['name']); ?>"
                                            title="Chỉnh sửa">
                                             <i class="feather-edit text-primary"></i>
                                         </a>
-                                        <a href="trademark/delete/{{ $item['id'] }}" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Xóa" onclick="return confirm('Bạn chắc chắn muốn xoá thương hiệu này?');">
+                                        <a href="trademark/delete/<?php echo e($item['id']); ?>" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Xóa" onclick="return confirm('Bạn chắc chắn muốn xoá thương hiệu này?');">
                                             <i class="feather-trash-2 text-danger"></i>
                                         </a>
                                     </div>
                                 </td>
                             </tr>
-                            @endforeach
-                            @if(empty($trademark))
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php if(empty($trademark)): ?>
                             <tr>
                                 <td colspan="5" class="text-center py-4 text-muted">
                                     <i class="feather-award fs-1 display-6 d-block mb-2"></i>
                                     Chưa có thương hiệu nào
                                 </td>
                             </tr>
-                            @endif
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -73,7 +74,7 @@
     </div>
 </div>
 
-@push('modals')
+<?php $__env->startPush('modals'); ?>
 <!-- Modal Add -->
 <div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="modalAddLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -130,10 +131,10 @@
         </form>
     </div>
 </div>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@endsection
-@push('scripts')
+<?php $__env->stopSection(); ?>
+<?php $__env->startPush('scripts'); ?>
 <script>
     const modalEdit = document.getElementById('modalEdit');
     modalEdit.addEventListener('show.bs.modal', function (event) {
@@ -150,4 +151,5 @@
         formEdit.action = `/trademark/update/${id}`;
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layouts.index_admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\lab2-30-1-26\PHP2\app\views/trademarks/index.blade.php ENDPATH**/ ?>

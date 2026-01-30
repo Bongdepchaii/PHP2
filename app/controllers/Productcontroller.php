@@ -41,6 +41,7 @@ class Productcontroller extends Controller
             $price = trim($_POST['price']);
             $quantity = trim($_POST['quantity']);
             $mota = trim($_POST['mota']);
+            $created_at = date('Y-m-d H:i:s');
             $id_category = trim($_POST['id_category']);
             $id_color = trim($_POST['id_color']);
             
@@ -77,14 +78,15 @@ class Productcontroller extends Controller
                     'img' => $imgJson,
                     'quantity' => $quantity,
                     'mota' => $mota,
+                    'created_at' => $created_at,
                     'id_category' => $id_category,
                     'id_color' => $id_color
                 ]);
                 $_SESSION['success'] = "Thêm sản phẩm thành công";
             }
-            $this->redirect('/product/index');
+            $this->redirect('/product/');
         } else {
-            $this->redirect('/product/index');
+            $this->redirect('/product/');
         }
     }
 
@@ -95,6 +97,7 @@ class Productcontroller extends Controller
             $price = trim($_POST['price']);
             $quantity = trim($_POST['quantity']);
             $mota = trim($_POST['mota']);
+            $created_at = date('Y-m-d H:i:s');
             $id_category = trim($_POST['id_category']);
             $id_color = trim($_POST['id_color']);
             

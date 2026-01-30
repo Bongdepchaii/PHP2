@@ -20,7 +20,7 @@ class Product extends Model
     }
 
     public function create($data = [], $id = null) {
-        $sql = "insert into $this->table (name, price, img, quantity, mota, id_category, id_color) values (:name, :price, :img, :quantity, :mota, :id_category, :id_color)";
+        $sql = "insert into $this->table (name, price, img, quantity, mota, id_category, id_color, created_at) values (:name, :price, :img, :quantity, :mota, :id_category, :id_color, :created_at)";
         $conn = $this->connect();
         $stmt = $conn->prepare($sql);
         $stmt->execute([ 
@@ -29,6 +29,7 @@ class Product extends Model
             'img' => $data['img'],
             'quantity' => $data['quantity'],
             'mota' => $data['mota'],
+            'created_at' => $data['created_at'],
             'id_category' => $data['id_category'],
             'id_color' => $data['id_color']
         ]);
