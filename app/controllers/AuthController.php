@@ -28,7 +28,7 @@ class AuthController extends Controller
                     $_SESSION['email'] = $user['email'];
                     // Add avatar if exists
                     
-                    $_SESSION['success'] = "Đăng nhập thành công";
+                    // $_SESSION['success'] = "Đăng nhập thành công";
                     
                     if ($user['role'] == 'admin') {
                         $this->redirect('/category'); // Or dashboard

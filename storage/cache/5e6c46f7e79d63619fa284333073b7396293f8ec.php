@@ -42,7 +42,13 @@
                                 </td>
                                 <td class="text-end">
                                     <div class="hstack gap-2 justify-content-end">
-                                        <a href="trademark/edit/<?php echo e($item['id']); ?>" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Sửa">
+                                       <a href="javascript:void(0);" 
+                                           class="avatar-text avatar-md" 
+                                           data-bs-toggle="modal" 
+                                           data-bs-target="#modalEdit"
+                                           data-id="<?php echo e($item['id']); ?>"
+                                           data-name="<?php echo e($item['name']); ?>"
+                                           title="Chỉnh sửa">
                                             <i class="feather-edit text-primary"></i>
                                         </a>
                                         <a href="trademark/delete/<?php echo e($item['id']); ?>" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Xóa" onclick="return confirm('Bạn chắc chắn muốn xoá thương hiệu này?');">
@@ -142,7 +148,7 @@
         const formEdit = modalEdit.querySelector('#formEdit');
 
         inputName.value = name;
-        formEdit.action = `/category/update/${id}`;
+        formEdit.action = `/trademark/update/${id}`;
     });
 </script>
 <?php $__env->stopPush(); ?>

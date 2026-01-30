@@ -8,7 +8,7 @@
     $catMap = array_column($categories, 'name', 'id');
     ?>
         <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-    <div class="col-12 col-sm-6 col-xl-4">
+    <div class="col-12 col-sm-6 col-xl-3">
         <div class="card h-100 shadow-sm border-0">
             <?php
                 $images = json_decode($item['img'], true);

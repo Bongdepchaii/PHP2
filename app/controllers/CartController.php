@@ -3,7 +3,7 @@ class CartController extends Controller
 {
     public function index()
     {
-        $cart = $this->model('cart'); //
+        $cart = $this->model('product'); //
         // $product = new Product();
         $data = $cart->all();
         // var_dump($data);

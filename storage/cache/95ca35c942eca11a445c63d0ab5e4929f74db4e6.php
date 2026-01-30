@@ -3,22 +3,19 @@
           <div class="card-header bg-white fw-semibold">Thương hiệu</div>
           <div class="list-group list-group-flush">
             <a href="#" class="list-group-item list-group-item-action active">All</a>
-            <a href="#" class="list-group-item list-group-item-action">Canon</a>
-            <a href="#" class="list-group-item list-group-item-action">Sony</a>
-            <a href="#" class="list-group-item list-group-item-action">Fujifilm</a>
-            <a href="#" class="list-group-item list-group-item-action">Panasonic</a>
+            <a href="#" class="list-group-item list-group-item-action ">Sony</a>
+            <a href="#" class="list-group-item list-group-item-action ">Panasonic</a>
           </div>
         </div>
-        <div class="card shadow-sm mt-3">
+        <div class="card shadow-sm mt-2">
           <div class="card-header bg-white fw-semibold">Danh mục</div>
           <div class="list-group list-group-flush">
             <a href="#" class="list-group-item list-group-item-action active">All</a>
-            <a href="#" class="list-group-item list-group-item-action">Máy ảnh</a>
-            <a href="#" class="list-group-item list-group-item-action">Phụ kiện</a>
+            <a href="" class="list-group-item list-group-item-action" ><?php echo e($catMap[$item['id_category']]); ?></a>
           </div>
         </div>
 
-        <div class="card shadow-sm mt-3">
+        <div class="card shadow-sm mt-2">
           <div class="card-body">
             <div class="fw-semibold mb-2">Lọc giá</div>
             <div class="d-flex gap-2">
