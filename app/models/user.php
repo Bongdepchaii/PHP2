@@ -52,30 +52,22 @@ class User extends Model
     }
 
     public function update($data = [], $id) {
-        $sql = "update $this->table set username = :username, email = :email, name = :name, sex = :sex, age = :age, address = :address, role = :role, created_at = :created_at";
-        if (!empty($data['password'])) {
-            $sql .= ", password = :password";
+        $setParts = [];
+        $params = ['id' => $id];
+
+        foreach ($data as $key => $value) {
+            $setParts[] = "$key = :$key";
+            $params[$key] = $value;
         }
-        $sql .= " where id = :id";
+
+        if (empty($setParts)) {
+            return false; 
+        }
+
+        $sql = "update $this->table set " . implode(', ', $setParts) . " where id = :id";
         
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
-        
-        $params = [
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'name' => $data['name'],
-            'sex' => $data['sex'],
-            'age' => $data['age'],
-            'address' => $data['address'],
-            'role' => $data['role'],
-            'created_at' => $data['created_at'],
-            'id' => $id
-        ];
-        
-        if (!empty($data['password'])) {
-            $params['password'] = $data['password'];
-        }
         
         return $stmt->execute($params);
     }

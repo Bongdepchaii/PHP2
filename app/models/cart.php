@@ -2,48 +2,57 @@
 class Cart extends Model
 {
     private $table = "cart";
-    public function all()
+    
+    // Find all items for a specific user
+    public function findByUser($userId)
     {
-        $sql = "select * from $this->table";
+        $sql = "SELECT c.*, p.name as product_name, p.price, p.img 
+                FROM $this->table c 
+                JOIN product p ON c.id_product = p.id 
+                WHERE c.id_user = :id_user";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
-        $stmt->execute([]);
+        $stmt->execute(['id_user' => $userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function find($id)
+    // Find specific item in cart for a user
+    public function findItem($userId, $productId)
     {
-        $sql = "select * from $this->table where id = :id";
+        $sql = "SELECT * FROM $this->table WHERE id_user = :id_user AND id_product = :id_product";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         $stmt->execute([
-            'id' => $id
+            'id_user' => $userId,
+            'id_product' => $productId
         ]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function create($data = [])
     {
-        $sql = "insert into $this->table (name) VALUES (:name)";
+        $sql = "INSERT INTO $this->table (id_user, id_product, quantity) VALUES (:id_user, :id_product, :quantity)";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
-            'name' => $data['name'],
+            'id_user' => $data['id_user'],
+            'id_product' => $data['id_product'],
+            'quantity' => $data['quantity']
         ]);
     }
 
-    public function update($data = [], $id) {
-        $sql = "update $this->table set name = :name where id = :id";
+    public function updateQuantity($id, $quantity) {
+        $sql = "UPDATE $this->table SET quantity = :quantity WHERE id = :id";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
-            'name' => $data['name'],
-            'id' => (int)$id
+            'quantity' => $quantity,
+            'id' => $id
         ]);
     }
 
     public function delete($id) {
-        $sql = "delete from $this->table where id = :id";
+        $sql = "DELETE FROM $this->table WHERE id = :id";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
@@ -51,3 +60,4 @@ class Cart extends Model
         ]);
     }
 }
+?>

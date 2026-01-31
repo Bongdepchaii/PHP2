@@ -19,14 +19,12 @@
             </form>
 
             <?php if(isset($_SESSION['user_id'])): ?>
-                <?php if($_SESSION['role'] == 'user'): ?>
                     <a href="/cart" class="position-relative text-dark text-decoration-none me-2">
                         <i class="fas fa-shopping-cart fs-5"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
-                            0
+                            12
                         </span>
                     </a>
-                <?php endif; ?>
                 
                 <div class="dropdown">
                     <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
@@ -36,7 +34,7 @@
                         <span class="fw-semibold small d-none d-md-block"><?php echo e($_SESSION['user_name'] ?? 'User'); ?></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/profile">Hồ sơ cá nhân</a></li>
+                        <li><a class="dropdown-item" href="/auth/profile">Hồ sơ cá nhân</a></li>
                         <?php if($_SESSION['role'] == 'admin'): ?>
                         <li><a class="dropdown-item mt-2" href="/product">Quản lý sản phẩm</a></li>
                         <?php endif; ?>

@@ -43,6 +43,12 @@
                         </a>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
+                        <a href="/voucher" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-gift"></i></span>
+                            <span class="nxl-mtext">Voucher</span>
+                        </a>
+                    </li>
+                    <li class="nxl-item nxl-hasmenu">
                         <a href="/user" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-users"></i></span>
                             <span class="nxl-mtext">Người dùng</span>

@@ -33,8 +33,8 @@ class Router
     }
     public function notFound($message): void
     {
-        // return $message;
+        $controller = new Controller();
         http_response_code(404);
-        echo "<h1 style='color: red'>404 NOT FOUND - $message. </h1>";
+        $controller->view('layouts.notfound', ['message' => $message]);
     }
 }

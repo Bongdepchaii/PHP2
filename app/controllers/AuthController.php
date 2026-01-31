@@ -3,9 +3,8 @@ class AuthController extends Controller
 {
     public function login()
     {
-        // If already logged in, redirect to home
         if (isset($_SESSION['user_id'])) {
-            $this->redirect('/home/index'); // Or admin/index depending on role
+            $this->redirect('/home/index');  
         }
 
         $title = "Đăng nhập";
@@ -21,17 +20,15 @@ class AuthController extends Controller
                 $user = $userModel->findByEmail($email);
                 
                 if ($user && password_verify($password, $user['password'])) {
-                    // Login success
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['user_name'] = $user['name'];
                     $_SESSION['role'] = $user['role'];
                     $_SESSION['email'] = $user['email'];
-                    // Add avatar if exists
                     
                     // $_SESSION['success'] = "Đăng nhập thành công";
                     
                     if ($user['role'] == 'admin') {
-                        $this->redirect('/category'); // Or dashboard
+                        $this->redirect('/category');
                     } else {
                         $this->redirect('/home/index');
                     }
@@ -68,7 +65,6 @@ class AuthController extends Controller
             } else {
                  $userModel = $this->model('user');
                  
-                 // Check email exists
                  $existingUser = $userModel->findByEmail($email);
                  if ($existingUser) {
                      $_SESSION['error'] = "Email này đã được sử dụng";
@@ -94,6 +90,66 @@ class AuthController extends Controller
 
         $this->view("users/register", [
             'title' => $title
+        ]);
+    }
+
+    public function profile()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('/auth/login');
+        }
+
+        $userModel = $this->model('user');
+        $user = $userModel->find($_SESSION['user_id']);
+
+        if (!$user) {
+            session_unset();
+            session_destroy();
+            $this->redirect('/auth/login');
+        }
+
+        $title = "Hồ sơ cá nhân";
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $name = trim($_POST['name']);
+            $email = trim($_POST['email']); 
+            $age = trim($_POST['age']);
+            $sex = trim($_POST['sex']);
+            $address = trim($_POST['address']);
+            $phone = isset($_POST['phone']) ? trim($_POST['phone']) : ''; 
+
+            if (empty($name) || empty($email)) {
+                $_SESSION['error'] = "Tên và Email không được để trống";
+            } else {
+                 $data = [
+                    'name' => $name,
+                    'email' => $email, 
+                    'age' => $age,
+                    'sex' => $sex,
+                    'address' => $address,
+                    // 'phone' => $phone 
+                ];
+
+                if (!empty($_POST['new_password'])) {
+                    if ($_POST['new_password'] === $_POST['confirm_new_password']) {
+                         $data['password'] = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
+                    } else {
+                         $_SESSION['error'] = "Mật khẩu mới không khớp";
+                         $this->view("users/profile", ['title' => $title, 'user' => $user]); 
+                         return;
+                    }
+                }
+
+                $userModel->update($data, $_SESSION['user_id']);
+                $_SESSION['success'] = "Cập nhật hồ sơ thành công";
+                $_SESSION['user_name'] = $name;  
+                $user = $userModel->find($_SESSION['user_id']); 
+            }
+        }
+
+        $this->view("users/profile", [
+            'title' => $title,
+            'user' => $user
         ]);
     }
 

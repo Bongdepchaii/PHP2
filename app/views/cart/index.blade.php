@@ -3,13 +3,13 @@
 @section('content')
 
 <div class="container py-4">
-    <h4 class="fw-bold mb-4">GIỎ HÀNG (<span class="text-primary">1</span> sản phẩm)</h4>
+    <h4 class="fw-bold mb-4">GIỎ HÀNG (<span class="text-primary">{{ count($cart) }}</span> sản phẩm)</h4>
     
     <div class="row g-4">
         <div class="col-12 col-lg-12">
             <div class="card border-0 shadow-sm rounded-3">
                 <div class="card-body p-0">
-                    @if(empty($products))
+                    @if(empty($cart))
                         <div class="text-center py-5">
                             <img src="https://cdn-icons-png.flaticon.com/512/11329/11329060.png" alt="Empty Cart" style="width: 150px;" class="mb-3 opacity-50">
                             <h5 class="text-muted">Giỏ hàng của bạn đang trống</h5>
@@ -23,29 +23,36 @@
                             <div style="flex: 1;" class="text-end">THÀNH TIỀN</div>
                         </div>
 
+                        @foreach($cart as $item)
+                        @php
+                            $images = json_decode($item['img'], true);
+                            $displayImg = is_array($images) && !empty($images) ? $images[0] : (is_string($item['img']) && !empty($item['img']) ? $item['img'] : '');
+                            $imgSrc = !empty($displayImg) ? "/app/images/img/" . $displayImg : "https://via.placeholder.com/80";
+                        @endphp
                         <div class="p-3 border-bottom align-items-center d-flex flex-column flex-md-row">
                             <div class="d-flex align-items-center w-100" style="flex: 2;">
-                                <img src="https://via.placeholder.com/80" class="rounded-2 border" alt="Canon R50">
+                                <img src="{{ $imgSrc }}" class="rounded-2 border" alt="{{ $item['product_name'] }}" style="width: 80px; height: 80px; object-fit: cover;">
                                 <div class="ms-3">
-                                    <h6 class="mb-1 fw-bold">Canon EOS R50</h6>
-                                    <p class="small text-muted mb-0">Chính hãng / Đen</p>
-                                    <button class="btn btn-link btn-sm p-0 text-danger text-decoration-none mt-1">Xóa</button>
+                                    <h6 class="mb-1 fw-bold">{{ $item['product_name'] }}</h6>
+                                    <!-- <p class="small text-muted mb-0">Color/Info if available</p> -->
+                                    <a href="/cart/delete/{{ $item['id'] }}" class="btn btn-link btn-sm p-0 text-danger text-decoration-none mt-1" onclick="return confirm('Xóa sản phẩm này?')">Xóa</a>
                                 </div>
                             </div>
                             <div class="text-center w-100 mt-2 mt-md-0" style="flex: 1;">
-                                <span class="fw-semibold">17.890.000đ</span>
+                                <span class="fw-semibold">{{ number_format($item['price'], 0, ',', '.') }}đ</span>
                             </div>
                             <div class="d-flex justify-content-center w-100 mt-2 mt-md-0" style="flex: 1;">
                                 <div class="input-group input-group-sm" style="width: 100px;">
                                     <button class="btn btn-outline-secondary">-</button>
-                                    <input type="text" class="form-control text-center" value="1">
+                                    <input type="text" class="form-control text-center" value="{{ $item['quantity'] }}">
                                     <button class="btn btn-outline-secondary">+</button>
                                 </div>
                             </div>
                             <div class="text-end w-100 mt-2 mt-md-0" style="flex: 1;">
-                                <span class="fw-bold text-primary">17.890.000đ</span>
+                                <span class="fw-bold text-primary">{{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}đ</span>
                             </div>
                         </div>
+                        @endforeach
                     @endif
                 </div>
             </div>

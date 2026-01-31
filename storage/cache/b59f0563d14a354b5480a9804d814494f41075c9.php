@@ -78,7 +78,7 @@
 
                             <div class="mb-2">
                                 <label for="password" class="form-label small fw-semibold">Mật khẩu</label>
-                                <input type="password" class="form-control form-control-sm bg-light p-2" id="password" name="password" required>
+                                <input type="password" class="form-control form-control-sm bg-light p-2" id="password" name="password" placeholder="********" required>
                             </div>
                              <div class="mb-3">
                                 <label for="confirm_password" class="form-label small fw-semibold">Nhập lại Mật khẩu</label>

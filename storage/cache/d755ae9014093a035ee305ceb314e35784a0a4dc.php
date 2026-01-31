@@ -36,6 +36,19 @@
                             <h5 class="fw-bold text-primary">Chào mừng</h5>
                             <p class="text-muted small">Đăng nhập để tiếp tục</p>
                         </div>
+                        <?php if(isset($_SESSION['error'])): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?php echo e($_SESSION['error']); ?>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <?php endif; ?>
+
+
+                        <?php
+                        unset($_SESSION['success']);
+                        unset($_SESSION['error']);
+                        ?>
                         <form action="/auth/login" method="POST">
                             <div class="mb-2">
                                 <label for="email" class="form-label small fw-semibold">Email</label>
