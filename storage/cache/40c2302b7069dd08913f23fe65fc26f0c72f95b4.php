@@ -25,8 +25,13 @@
                 </div>
                 <p class="card-text text-muted small mb-2"><?php echo e(substr($item['mota'], 0, 80) . "..."); ?></p>
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="fw-semibold"><?php echo e($item['price']); ?></div>
-                    <a href="#" class="btn btn-sm btn-outline-primary">Mua ngay</a>
+                    <div class="fw-semibold"><?php echo e($item['price']); ?>
+
+                                            </div>
+                    <a href="/user/addFavorite/<?php echo e($item['id']); ?>" class="btn btn-sm btn-outline-danger" title="Thêm vào yêu thích">
+                        Yêu thích
+                    </a>
+                    <a href="/cart/add/<?php echo e($item['id']); ?>" class="btn btn-sm btn-outline-primary">Thêm vào giỏ</a>
                 </div>
             </div>
         </div>

@@ -60,6 +60,7 @@
     </div>
 </div>
 
+@include('layouts.includes.notification')
 @endsection
 
 @push('scripts')

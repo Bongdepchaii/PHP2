@@ -85,4 +85,56 @@ class UserController extends Controller
         $user->delete($id);
         $this->redirect('/user');
     }
+
+    public function favorite(){
+        if(!isset($_SESSION['user_id'])){
+            $this->redirect('/auth/login');
+        } else {
+            $favoriteModel = $this->model('favorite');
+            $favorites = $favoriteModel->getFavoritesByUserId($_SESSION['user_id']);
+            $title = "Sản phẩm yêu thích";
+            $this->view("users/favorite", [
+                'title' => $title,
+                'favorites' => $favorites
+            ]);
+        }
+    } 
+
+    public function deleteFavorite($id)
+    {
+        $favoriteModel = $this->model('favorite');
+        $favoriteModel->delete($id);
+        $_SESSION['success'] = "Đã xóa khỏi danh sách yêu thích";
+        $this->redirect('/user/favorite');
+    }
+
+    public function addFavorite($id)
+    {
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('/auth/login');
+            return;
+        }
+
+        $userId = $_SESSION['user_id'];
+        $favoriteModel = $this->model('favorite');
+        
+        // Check if already exists
+        if (!$favoriteModel->checkFavorite($userId, $id)) {
+            $favoriteModel->create([
+                'id_product' => $id,
+                'id_user' => $userId,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            $_SESSION['success'] = "Đã thêm vào danh sách yêu thích";
+        } else {
+            $_SESSION['error'] = "Sản phẩm đã có trong danh sách yêu thích";
+        }
+        
+        // Redirect back to previous page
+        if(isset($_SERVER['HTTP_REFERER'])) {
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+        } else {
+            $this->redirect('/');
+        }
+    }
 }

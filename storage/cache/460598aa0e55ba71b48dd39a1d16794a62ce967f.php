@@ -36,6 +36,19 @@
                             <h5 class="fw-bold text-primary">Chào mừng</h5>
                             <p class="text-muted small">Đăng nhập để tiếp tục</p>
                         </div>
+                        <?php if(isset($_SESSION['error'])): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?php echo e($_SESSION['error']); ?>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <?php endif; ?>
+
+
+                        <?php
+                        unset($_SESSION['success']);
+                        unset($_SESSION['error']);
+                        ?>
                         <form action="/auth/login" method="POST">
                             <div class="mb-2">
                                 <label for="email" class="form-label small fw-semibold">Email</label>
@@ -47,7 +60,7 @@
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <label for="password" class="form-label small fw-semibold">Mật khẩu</label>
-                                    <a href="#" class="small text-decoration-none" style="font-size: 0.8rem;">Quên mật khẩu?</a>
+                                    <a href="/auth/forgot" class="small text-decoration-none" style="font-size: 0.8rem;">Quên mật khẩu?</a>
                                 </div>
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-muted"></i></span>

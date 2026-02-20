@@ -25,8 +25,12 @@
                 </div>
                 <p class="card-text text-muted small mb-2">{{ substr($item['mota'], 0, 80) . "..." }}</p>
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="fw-semibold">{{ $item['price'] }}</div>
-                    <a href="/cart/add/{{ $item['id'] }}" class="btn btn-sm btn-outline-primary">Mua ngay</a>
+                    <div class="fw-semibold">{{ $item['price'] }}
+                                            </div>
+                    <a href="/user/addFavorite/{{ $item['id'] }}" class="btn btn-sm btn-outline-danger" title="Thêm vào yêu thích">
+                        Yêu thích
+                    </a>
+                    <a href="/cart/add/{{ $item['id'] }}" class="btn btn-sm btn-outline-primary">Thêm vào giỏ</a>
                 </div>
             </div>
         </div>

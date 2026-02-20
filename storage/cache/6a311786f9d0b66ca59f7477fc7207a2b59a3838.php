@@ -134,17 +134,15 @@
                     <div class="dropdown nxl-h-item">
                         <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button"
                             data-bs-auto-close="outside">
-                            <img src="https://thanhbui.click/wp-content/uploads/2025/09/tbs-removebg-preview.png" alt="user-image" class="img-fluid user-avtar me-0" />
+                            <img src="https://ui-avatars.com/api/?name=<?php echo e(urlencode($_SESSION['user_name'] )); ?>&background=random" class="img-fluid user-avtar" style="width: 32px; height: 32px;">
                         </a>
                         <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-user-dropdown">
                             <div class="dropdown-header">
                                 <div class="d-flex align-items-center">
-                                    <img src="https://thanhbui.click/wp-content/uploads/2025/09/tbs-removebg-preview.png" alt="user-image"
-                                        class="img-fluid user-avtar" />
+                                     <img src="https://ui-avatars.com/api/?name=<?php echo e(urlencode($_SESSION['user_name'] )); ?>&background=random" class="img-fluid user-avtar" style="width: 32px; height: 32px;">
                                     <div>
-                                        <h6 class="text-dark mb-0">Admin <span
-                                                class="badge bg-soft-success text-success ms-1">PRO</span></h6>
-                                        <span class="fs-12 fw-medium text-muted">thanhbtps46198@gmail.com</span>
+                                        <h6 class="text-dark mb-0"><?php echo e($_SESSION['user_name']); ?> <span class="badge bg-soft-success text-success ms-1">PRO</span></h6>
+                                        <span class="fs-12 fw-medium text-muted"><?php echo e($_SESSION['email']); ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -204,7 +202,7 @@
                                 </div>
                             </div>
                             <div class="dropdown-divider"></div>
-                            <a href="javascript:void(0);" class="dropdown-item">
+                            <a href="/auth/profile" class="dropdown-item">
                                 <i class="feather-user"></i>
                                 <span>Hồ sơ</span>
                             </a>

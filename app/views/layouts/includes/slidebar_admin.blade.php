@@ -49,6 +49,12 @@
                         </a>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
+                        <a href="/contact/admin" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-message-circle"></i></span>
+                            <span class="nxl-mtext">Liên hệ</span>
+                        </a>
+                    </li>
+                    <li class="nxl-item nxl-hasmenu">
                         <a href="/user" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-users"></i></span>
                             <span class="nxl-mtext">Người dùng</span>

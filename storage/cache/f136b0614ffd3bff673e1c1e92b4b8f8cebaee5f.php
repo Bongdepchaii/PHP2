@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title }}</title>
+    <title><?php echo e($title); ?></title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Icons -->
@@ -169,7 +169,7 @@
         }
         
         /* Animation */
-        @keyframes fadeIn {
+        @keyframes  fadeIn {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
@@ -186,23 +186,27 @@
             <!-- Left Sidebar -->
             <div class="col-md-4 profile-sidebar d-flex flex-column justify-content-center align-items-center">
                 <div class="avatar-container">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($user['name']) }}&background=random&color=fff&size=150" 
+                    <img src="https://ui-avatars.com/api/?name=<?php echo e(urlencode($user['name'])); ?>&background=random&color=fff&size=150" 
                          alt="Avatar" class="user-avatar">
                 </div>
-                <h4 class="fw-bold mb-1" style="font-size: 1.25rem;">{{ $user['name'] }}</h4>
+                <h4 class="fw-bold mb-1" style="font-size: 1.25rem;"><?php echo e($user['name']); ?></h4>
                 <div class="user-role">
-                    {{ $user['role'] == 'admin' ? 'Quản Trị Viên' : 'Thành Viên' }}
+                    <?php echo e($user['role'] == 'admin' ? 'Quản Trị Viên' : 'Thành Viên'); ?>
+
                 </div>
                 
                 <div class="mt-4 w-100 px-3 text-start">
                     <div class="info-item">
-                        <i class="fas fa-envelope"></i> {{ $user['email'] }}
+                        <i class="fas fa-envelope"></i> <?php echo e($user['email']); ?>
+
                     </div>
                     <div class="info-item">
-                        <i class="fas fa-calendar-alt"></i> Tham gia: {{ date('d/m/Y', strtotime($user['created_at'])) }}
+                        <i class="fas fa-calendar-alt"></i> Tham gia: <?php echo e(date('d/m/Y', strtotime($user['created_at']))); ?>
+
                     </div>
                     <div class="info-item">
-                        <i class="fas fa-map-marker-alt"></i> {{ $user['address'] ? $user['address'] : 'Chưa cập nhật' }}
+                        <i class="fas fa-map-marker-alt"></i> <?php echo e($user['address'] ? $user['address'] : 'Chưa cập nhật'); ?>
+
                     </div>
                 </div>
             </div>
@@ -220,47 +224,49 @@
 
                 <h5 class="fw-bold mb-3" style="color: var(--primary-color);">Cập nhật thông tin</h5>
 
-                @if(isset($_SESSION['success']))
+                <?php if(isset($_SESSION['success'])): ?>
                     <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-                        <i class="fas fa-check-circle me-2"></i> {{ $_SESSION['success'] }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    @php unset($_SESSION['success']); @endphp
-                @endif
+                        <i class="fas fa-check-circle me-2"></i> <?php echo e($_SESSION['success']); ?>
 
-                @if(isset($_SESSION['error']))
-                    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i> {{ $_SESSION['error'] }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    @php unset($_SESSION['error']); @endphp
-                @endif
+                    <?php unset($_SESSION['success']); ?>
+                <?php endif; ?>
+
+                <?php if(isset($_SESSION['error'])): ?>
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i> <?php echo e($_SESSION['error']); ?>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <?php unset($_SESSION['error']); ?>
+                <?php endif; ?>
 
                 <form action="/auth/profile" method="POST">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="name" class="form-label">Họ và tên</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ $user['name'] }}" required>
+                            <input type="text" class="form-control" id="name" name="name" value="<?php echo e($user['name']); ?>" required>
                         </div>
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ $user['email'] }}" required>
+                            <input type="email" class="form-control" id="email" name="email" value="<?php echo e($user['email']); ?>" required>
                         </div>
                         <div class="col-md-6">
                             <label for="age" class="form-label">Tuổi</label>
-                            <input type="number" class="form-control" id="age" name="age" value="{{ $user['age'] }}">
+                            <input type="number" class="form-control" id="age" name="age" value="<?php echo e($user['age']); ?>">
                         </div>
                         <div class="col-md-6">
                             <label for="sex" class="form-label">Giới tính</label>
                             <select class="form-select" id="sex" name="sex">
-                                <option value="Male" {{ $user['sex'] == 'Male' ? 'selected' : '' }}>Nam</option>
-                                <option value="Female" {{ $user['sex'] == 'Female' ? 'selected' : '' }}>Nữ</option>
-                                <option value="Other" {{ $user['sex'] == 'Other' ? 'selected' : '' }}>Khác</option>
+                                <option value="Male" <?php echo e($user['sex'] == 'Male' ? 'selected' : ''); ?>>Nam</option>
+                                <option value="Female" <?php echo e($user['sex'] == 'Female' ? 'selected' : ''); ?>>Nữ</option>
+                                <option value="Other" <?php echo e($user['sex'] == 'Other' ? 'selected' : ''); ?>>Khác</option>
                             </select>
                         </div>
                         <div class="col-12">
                             <label for="address" class="form-label">Địa chỉ</label>
-                            <input type="text" class="form-control" id="address" name="address" value="{{ $user['address'] }}" placeholder="Nhập địa chỉ của bạn">
+                            <input type="text" class="form-control" id="address" name="address" value="<?php echo e($user['address']); ?>" placeholder="Nhập địa chỉ của bạn">
                         </div>
                         <div class="col-12 mt-4 text-end">
                             <button type="submit" class="btn btn-update">
@@ -277,3 +283,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\lab2-30-1-26\PHP2\app\views/users/profile.blade.php ENDPATH**/ ?>

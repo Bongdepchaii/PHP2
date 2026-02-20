@@ -72,6 +72,38 @@ class User extends Model
         return $stmt->execute($params);
     }
 
+    // forgot password
+
+    public function saveOtp($email, $otp, $expiry)
+    {
+        // Cột trong DB: otp (int), end_otp (time)
+        $sql = "UPDATE $this->table SET otp = :otp, end_otp = :expiry WHERE email = :email";
+        $conn = $this->connect();
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute([
+            'otp'    => $otp,
+            'expiry' => $expiry,
+            'email'  => $email,
+        ]);
+    }
+
+    public function findByOtp($otp)
+    {
+        $sql = "SELECT * FROM $this->table WHERE otp = :otp";
+        $conn = $this->connect();
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['otp' => (int)$otp]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function clearOtp($id)
+    {
+        $sql = "UPDATE $this->table SET otp = NULL, end_otp = NULL WHERE id = :id";
+        $conn = $this->connect();
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute(['id' => $id]);
+    }
+
     public function delete($id) {
         $sql = "delete from $this->table where id = :id";
         $conn = $this->connect();

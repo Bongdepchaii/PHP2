@@ -59,7 +59,7 @@
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <label for="password" class="form-label small fw-semibold">Mật khẩu</label>
-                                    <a href="#" class="small text-decoration-none" style="font-size: 0.8rem;">Quên mật khẩu?</a>
+                                    <a href="/auth/forgot" class="small text-decoration-none" style="font-size: 0.8rem;">Quên mật khẩu?</a>
                                 </div>
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-muted"></i></span>

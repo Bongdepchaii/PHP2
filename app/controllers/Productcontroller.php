@@ -176,5 +176,48 @@ class Productcontroller extends Controller
         }
         $this->redirect('/product/index');
     }
+
+        function add_variant(){
+        /**
+         *  xử lý method post
+         *  kiểm tra trùng, validate 
+         *  thêm thành công ->
+         *  dùng js để load lên giao diện người dùng
+         */
+        header('Content-Type: application/json');
+        $variant = $this->model('variant');
+
+        $data = array(
+            'sizeId' => 1,
+            'colorId' => 2,
+            'image' => '',
+            'quantity' => 5
+        );
+        $variant->create($data);
+        $json_string = json_encode($data);
+        echo $json_string;
+    }
+
+    function product_detail($id){
+        $productmodel = $this->model('product');
+        $product = $productmodel->find($id);
+        $title = "Chi tiết sản phẩm";
+        $this->view("products/detail", [
+            'title' => $title,
+            'product' =>$product
+        ]);
+    }
+
+    // San pham lien quan
+    function product_related($id){
+        $productmodel = $this->model('product');
+        $currentProduct = $productmodel->find($id);
+        $relatedProducts = $productmodel->where('id_category', $currentProduct['id_category']);
+        $title = "Sản phẩm liên quan";
+        $this->view("products/related", [
+            'title' => $title,
+            'products' => $relatedProducts
+        ]);
+    }
 }
 

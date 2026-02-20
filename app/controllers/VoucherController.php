@@ -3,18 +3,15 @@ class VoucherController extends Controller
 {
     public function index()
     {
-        $voucherModel = $this->model('voucher');
-        $vouchers = $voucherModel->all();
-        
-        // Normalize data for view if necessary (mapping id_voucher to id)
-        $normalizedVouchers = array_map(function($item) {
-            if (isset($item['id_voucher']) && !isset($item['id'])) {
-                $item['id'] = $item['id_voucher'];
-            }
-            return $item;
-        }, $vouchers);
-
-        $this->view('vouchers.index', ['voucher' => $normalizedVouchers]);
+        $voucher = $this->model('voucher'); //
+        // $product = new Product();
+        $data = $voucher->all();
+        // var_dump($data);
+        $title = "Quản lý voucher";
+        $this->view("vouchers/index", [
+            'title' => $title,
+            'voucher' => $data,
+        ]);
     }
 
     public function add()

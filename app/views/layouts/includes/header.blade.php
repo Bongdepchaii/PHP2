@@ -35,6 +35,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/auth/profile">Hồ sơ cá nhân</a></li>
+                        <li><a class="dropdown-item" href="/user/favorite">Yêu thích sản phẩm</a></li>
                         @if($_SESSION['role'] == 'admin')
                         <li><a class="dropdown-item mt-2" href="/product">Quản lý sản phẩm</a></li>
                         @endif

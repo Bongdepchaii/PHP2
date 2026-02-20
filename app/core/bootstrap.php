@@ -11,8 +11,9 @@ define('MODEL_PATH', APP_PATH . '/models');
 $vendorAutoload = BASE_PATH . "/vendor/autoload.php";
 // var_dump($vendorAutoload);
 if (file_exists($vendorAutoload)) {
-    // echo "exist here";
     require_once $vendorAutoload;
+    // Load MailService (không phải Composer package nên cần require thủ công)
+    require_once BASE_PATH . '/vendor/Mailservice.php';
 } else {
     echo "not working";
 }
