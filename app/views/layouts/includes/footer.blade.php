@@ -1,5 +1,5 @@
 <!-- Footer -->
-<footer class="bg-dark text-white pt-5 pb-3" style="margin-top: 54px;">
+<footer class="bg-dark text-white pt-5 pb-3" style="margin-top: 126px;">
     <div class="container text-center text-md-start">
         <div class="row text-center text-md-start">
             <!-- Company Info -->

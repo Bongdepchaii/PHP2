@@ -2,6 +2,41 @@
 class Voucher extends Model
 {
     private $table = "voucher";
+
+    // Tìm voucher theo mã code (field `id`), kiểm tra hợp lệ
+    public function findByCode($code)
+    {
+        $sql = "SELECT * FROM {$this->table}
+                WHERE id = :code
+                  AND status = 'active'
+                  AND quanity > 0
+                  AND end_date >= CURDATE()";
+        $conn = $this->connect();
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['code' => $code]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Lấy danh sách voucher còn hiệu lực để hiển thị cho user
+    public function getActiveVouchers()
+    {
+        $sql = "SELECT * FROM {$this->table}
+                WHERE status = 'active' AND quanity > 0 AND end_date >= CURDATE()
+                ORDER BY value DESC";
+        $conn = $this->connect();
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Trừ 1 lượt sử dụng sau khi đặt hàng thành công
+    public function decreaseQuantity($code)
+    {
+        $sql = "UPDATE {$this->table} SET quanity = quanity - 1 WHERE id = :code AND quanity > 0";
+        $conn = $this->connect();
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute(['code' => $code]);
+    }
     public function all()
     {
         $sql = "select * from $this->table";

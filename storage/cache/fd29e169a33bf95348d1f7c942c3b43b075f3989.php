@@ -11,7 +11,7 @@
                     <i class="feather-plus me-1"></i> Thêm sản phẩm
                 </a>
             </div>
-            <?php echo $__env->make('layouts.includes.alert', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+              <?php echo $__env->make('layouts.includes.notification', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
             <div class="card-body custom-card-action p-0">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
@@ -89,6 +89,7 @@
                                            data-mota="<?php echo e($item['mota'] ?? ''); ?>"
                                            data-img="<?php echo e(htmlspecialchars($item['img'], ENT_QUOTES, 'UTF-8')); ?>"
                                            data-idcategory="<?php echo e($item['id_category'] ?? ''); ?>"
+                                           data-idtrademark="<?php echo e($item['id_trademark'] ?? ''); ?>"
                                            data-idcolor="<?php echo e($item['id_color'] ?? ''); ?>"
                                            title="Chỉnh sửa">
                                             <i class="feather-edit text-primary"></i>
@@ -130,7 +131,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label class="form-label">Tên sản phẩm</label>
                             <input type="text" class="form-control" name="name" required>
                         </div>
@@ -140,6 +141,15 @@
                                 <option value="">-- Chọn danh mục --</option>
                                 <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <option value="<?php echo e($cat['id']); ?>"><?php echo e($cat['name']); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Hãng sản xuất</label>
+                            <select class="form-select" name="id_trademark">
+                                <option value="">-- Chọn hãng --</option>
+                                <?php $__currentLoopData = $trademarks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($tm['id']); ?>"><?php echo e($tm['name']); ?></option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
@@ -200,7 +210,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label class="form-label">Tên sản phẩm</label>
                             <input type="text" class="form-control" id="nameEdit" name="name" required>
                         </div>
@@ -210,6 +220,15 @@
                                 <option value="">-- Chọn danh mục --</option>
                                 <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <option value="<?php echo e($cat['id']); ?>"><?php echo e($cat['name']); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Hãng sản xuất</label>
+                            <select class="form-select" id="trademarkEdit" name="id_trademark">
+                                <option value="">-- Chọn hãng --</option>
+                                <?php $__currentLoopData = $trademarks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($tm['id']); ?>"><?php echo e($tm['name']); ?></option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
@@ -317,6 +336,7 @@
         modalEdit.querySelector('#quantityEdit').value = button.getAttribute('data-quantity');
         modalEdit.querySelector('#motaEdit').value = button.getAttribute('data-mota');
         modalEdit.querySelector('#catEdit').value = button.getAttribute('data-idcategory');
+        modalEdit.querySelector('#trademarkEdit').value = button.getAttribute('data-idtrademark');
         modalEdit.querySelector('#colorEdit').value = button.getAttribute('data-idcolor');
 
         // Handle Existing Images Preview

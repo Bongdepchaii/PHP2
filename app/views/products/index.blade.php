@@ -11,7 +11,7 @@
                     <i class="feather-plus me-1"></i> Thêm sản phẩm
                 </a>
             </div>
-            @include('layouts.includes.alert')
+              @include('layouts.includes.notification')
             <div class="card-body custom-card-action p-0">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
@@ -85,6 +85,7 @@
                                            data-mota="{{ $item['mota'] ?? '' }}"
                                            data-img="{{ htmlspecialchars($item['img'], ENT_QUOTES, 'UTF-8') }}"
                                            data-idcategory="{{ $item['id_category'] ?? '' }}"
+                                           data-idtrademark="{{ $item['id_trademark'] ?? '' }}"
                                            data-idcolor="{{ $item['id_color'] ?? '' }}"
                                            title="Chỉnh sửa">
                                             <i class="feather-edit text-primary"></i>
@@ -126,7 +127,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label class="form-label">Tên sản phẩm</label>
                             <input type="text" class="form-control" name="name" required>
                         </div>
@@ -136,6 +137,15 @@
                                 <option value="">-- Chọn danh mục --</option>
                                 @foreach($categories as $cat)
                                     <option value="{{ $cat['id'] }}">{{ $cat['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Hãng sản xuất</label>
+                            <select class="form-select" name="id_trademark">
+                                <option value="">-- Chọn hãng --</option>
+                                @foreach($trademarks as $tm)
+                                    <option value="{{ $tm['id'] }}">{{ $tm['name'] }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -196,7 +206,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label class="form-label">Tên sản phẩm</label>
                             <input type="text" class="form-control" id="nameEdit" name="name" required>
                         </div>
@@ -206,6 +216,15 @@
                                 <option value="">-- Chọn danh mục --</option>
                                 @foreach($categories as $cat)
                                     <option value="{{ $cat['id'] }}">{{ $cat['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Hãng sản xuất</label>
+                            <select class="form-select" id="trademarkEdit" name="id_trademark">
+                                <option value="">-- Chọn hãng --</option>
+                                @foreach($trademarks as $tm)
+                                    <option value="{{ $tm['id'] }}">{{ $tm['name'] }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -313,6 +332,7 @@
         modalEdit.querySelector('#quantityEdit').value = button.getAttribute('data-quantity');
         modalEdit.querySelector('#motaEdit').value = button.getAttribute('data-mota');
         modalEdit.querySelector('#catEdit').value = button.getAttribute('data-idcategory');
+        modalEdit.querySelector('#trademarkEdit').value = button.getAttribute('data-idtrademark');
         modalEdit.querySelector('#colorEdit').value = button.getAttribute('data-idcolor');
 
         // Handle Existing Images Preview

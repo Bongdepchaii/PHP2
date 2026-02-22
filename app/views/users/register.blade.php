@@ -37,7 +37,7 @@
                             <p class="text-muted small">Tham gia cùng chúng tôi</p>
                         </div>
 
-                        <!-- Include Alert -->
+                        <!-- Include Alert
                         @if(isset($_SESSION['success']))
                         <div class="alert alert-success alert-dismissible fade show py-2 small" role="alert">
                           {{$_SESSION['success']}}
@@ -55,8 +55,10 @@
                         @php
                         unset($_SESSION['success']);
                         unset($_SESSION['error']);
-                        @endphp
+                        @endphp -->
 
+                        @include('layouts.includes.notification')
+                        
                         <form action="/auth/register" method="POST">
                             <div class="row">
                                  <div class="col-md-12 mb-2">

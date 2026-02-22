@@ -12,17 +12,20 @@ class Productcontroller extends Controller
         $productModel = $this->model('product');
         $categoryModel = $this->model('category');
         $colorModel = $this->model('color');
+        $trademarkModel = $this->model('trademark');
 
         $products = $productModel->all();
         $categories = $categoryModel->all();
         $colors = $colorModel->all();
+        $trademarks = $trademarkModel->all();
 
         $title = "Quản lý sản phẩm";
         $this->view("products/index", [
             'title' => $title,
             'products' => $products,
             'categories' => $categories,
-            'colors' => $colors
+            'colors' => $colors,
+            'trademarks' => $trademarks
         ]);
     }
 
@@ -43,6 +46,7 @@ class Productcontroller extends Controller
             $mota = trim($_POST['mota']);
             $created_at = date('Y-m-d H:i:s');
             $id_category = trim($_POST['id_category']);
+            $id_trademark = trim($_POST['id_trademark']);
             $id_color = trim($_POST['id_color']);
             
             $finalImages = [];
@@ -80,6 +84,7 @@ class Productcontroller extends Controller
                     'mota' => $mota,
                     'created_at' => $created_at,
                     'id_category' => $id_category,
+                    'id_trademark' => $id_trademark,
                     'id_color' => $id_color
                 ]);
                 $_SESSION['success'] = "Thêm sản phẩm thành công";
@@ -99,6 +104,7 @@ class Productcontroller extends Controller
             $mota = trim($_POST['mota']);
             $created_at = date('Y-m-d H:i:s');
             $id_category = trim($_POST['id_category']);
+            $id_trademark = trim($_POST['id_trademark']);
             $id_color = trim($_POST['id_color']);
             
             $productModel = $this->model('product');
@@ -169,6 +175,7 @@ class Productcontroller extends Controller
                     'quantity' => $quantity,
                     'mota' => $mota,
                     'id_category' => $id_category,
+                    'id_trademark' => $id_trademark,
                     'id_color' => $id_color
                 ], $id);
                 $_SESSION['success'] = "Cập nhật thành công";
@@ -198,26 +205,48 @@ class Productcontroller extends Controller
         echo $json_string;
     }
 
-    function product_detail($id){
-        $productmodel = $this->model('product');
-        $product = $productmodel->find($id);
+    //  san pham chi tiet
+    function detail($id){
+        $productModel = $this->model('product');
+        $product = $productModel->find($id);
+        
+        if (!$product) {
+            $this->notFound("Sản phẩm không tồn tại");
+            return;
+        }
+
+        // Save Session
+        $recentlyViewed = $_SESSION['recently_viewed'] ?? [];
+
+        // Bước 2: Xoá ID hiện tại nếu đã có trong danh sách (tránh trùng)
+        $recentlyViewed = array_values(array_filter($recentlyViewed, fn($i) => $i != $id));
+
+        // Bước 3: Thêm ID sản phẩm hiện tại lên đầu danh sách
+        array_unshift($recentlyViewed, (int)$id);
+
+        // Bước 4: Giới hạn tối đa 5 sản phẩm trong danh sách
+        $recentlyViewed = array_slice($recentlyViewed, 0, 5);
+
+        // Bước 5: Lưu lại vào session
+        $_SESSION['recently_viewed'] = $recentlyViewed;
+
+        // Bước 6: Lấy ID các sản phẩm đã xem TRƯỚC ĐÓ (bỏ sản phẩm hiện tại)
+        $recentIds = array_values(array_filter($recentlyViewed, fn($i) => $i != $id));
+
+        // Bước 7: Truy vấn dữ liệu sản phẩm đã xem từ DB
+        $recentProducts = !empty($recentIds) ? $productModel->findByIds($recentIds) : [];
+
+        // nhan san pham lien quan
+        $relatedProducts = $productModel->getRelated($product['id_category'], $id, 4);
+
         $title = "Chi tiết sản phẩm";
         $this->view("products/detail", [
             'title' => $title,
-            'product' =>$product
+            'product' => $product,
+            'relatedProducts' => $relatedProducts,
+            'recentProducts' => $recentProducts
         ]);
     }
 
-    // San pham lien quan
-    function product_related($id){
-        $productmodel = $this->model('product');
-        $currentProduct = $productmodel->find($id);
-        $relatedProducts = $productmodel->where('id_category', $currentProduct['id_category']);
-        $title = "Sản phẩm liên quan";
-        $this->view("products/related", [
-            'title' => $title,
-            'products' => $relatedProducts
-        ]);
-    }
 }
 

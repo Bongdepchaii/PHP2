@@ -94,21 +94,7 @@
 
                 <div class="card-body p-4">
 
-                    @if(isset($_SESSION['forgot_error']))
-                    <div class="alert alert-danger alert-dismissible fade show py-2 small">
-                        {{ $_SESSION['forgot_error'] }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    @php unset($_SESSION['forgot_error']); @endphp
-                    @endif
-
-                    @if(isset($_SESSION['forgot_success']))
-                    <div class="alert alert-success alert-dismissible fade show py-2 small">
-                        {{ $_SESSION['forgot_success'] }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    @php unset($_SESSION['forgot_success']); @endphp
-                    @endif
+                      @include('layouts.includes.notification')
 
                     {{-- ==================== BƯỚC 1: NHẬP EMAIL ==================== --}}
                     <div id="section-email">

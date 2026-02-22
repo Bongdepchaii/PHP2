@@ -1,110 +1,81 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@yield('title')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/LogoTBS.png" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
-    <style>
-        .favorite-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .favorite-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-        }
-        .product-img-wrapper {
-             position: relative;
-             padding-top: 75%; /* 4:3 Aspect Ratio */
-             overflow: hidden;
-        }
-        .product-img {
-            position: absolute;
-            top: 0;
-            start: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
-</head>
+@extends('layouts.index')
+@section('title', $title ?? 'Yêu thích')
 
-<body class="bg-light d-flex flex-column min-vh-100">
+@push('styles')
+<style>
+.favorite-card { transition: transform .2s, box-shadow .2s; }
+.favorite-card:hover { transform: translateY(-4px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.12)!important; }
+.product-img-wrapper { position: relative; padding-top: 75%; overflow: hidden; }
+.product-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+</style>
+@endpush
 
-    <!-- Header -->
-    @include('layouts.includes.header')
+@section('content')
+<div class="row g-4">
 
-    <!-- Main Content -->
-    <main class="container py-5 flex-grow-1">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="mb-4 text-center text-primary-emphasis">Danh sách yêu thích của bạn</h2>
-                <hr class="mb-5 mx-auto w-25 text-primary">
-            </div>
-        </div>
+    {{-- Sidebar nav chung --}}
+    @include('layouts.includes.user_nav', ['user' => $user ?? [], 'activeTab' => 'favorites'])
 
-        <div class="row g-4">
-            @if (!empty($favorites))
-                @foreach ($favorites as $item)
-                    <div class="col-12 col-sm-6 col-md-4 col-xl-3">
-                        <div class="card h-100 shadow-sm border-0 favorite-card position-relative">
-                            @php
-                                $images = json_decode($item['img'], true);
-                                $displayImg = is_array($images) && !empty($images) ? $images[0] : (is_string($item['img']) && !empty($item['img']) ? $item['img'] : '');
-                                $imgSrc = !empty($displayImg) ? "/app/images/img/" . $displayImg : "https://picsum.photos/600/400?random=" . $item['id'];
-                            @endphp
-                            
-                            <!-- Remove Button -->
-                            <a href="/user/deleteFavorite/{{ $item['favorite_id'] }}" class="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-2 shadow-sm z-2 text-danger" onclick="return confirm('Bạn có chắc muốn xóa?')" title="Xóa khỏi yêu thích">
-                                <i class="bi bi-trash-fill"></i>
-                            </a>
+    {{-- Nội dung danh sách yêu thích --}}
+    <div class="col-12 col-md-9">
 
+        @include('layouts.includes.notification')
+
+        <h5 class="fw-bold mb-4"><i class="fas fa-heart me-2 text-danger"></i>Sản phẩm yêu thích</h5>
+
+        @if(!empty($favorites))
+            <div class="row g-3">
+                @foreach($favorites as $item)
+                @php
+                    $images     = json_decode($item['img'], true);
+                    $displayImg = is_array($images) && !empty($images) ? $images[0] : (is_string($item['img']) && !empty($item['img']) ? $item['img'] : '');
+                    $imgSrc     = !empty($displayImg) ? "/app/images/img/{$displayImg}" : "https://picsum.photos/300/225?random={$item['id']}";
+                @endphp
+                <div class="col-12 col-sm-6 col-xl-4">
+                    <div class="card h-100 border-0 shadow-sm favorite-card position-relative">
+
+                        {{-- Xóa khỏi yêu thích --}}
+                        <a href="/user/deleteFavorite/{{ $item['favorite_id'] }}"
+                           class="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-2 shadow-sm z-2 text-danger"
+                           onclick="return confirm('Xóa khỏi yêu thích?')" title="Xóa">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+
+                        <a href="/product/detail/{{ $item['id'] }}">
                             <div class="product-img-wrapper rounded-top">
                                 <img src="{{ $imgSrc }}" class="product-img" alt="{{ $item['name'] }}">
                             </div>
-                            
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title text-truncate" title="{{ $item['name'] }}">{{ $item['name'] }}</h5>
-                                <p class="card-text text-muted small mb-3 flex-grow-1">{{ substr($item['mota'], 0, 80) . "..." }}</p>
-                                
-                                <div class="mt-auto">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="fs-5 fw-bold text-danger">{{ number_format($item['price'], 0, ',', '.') }}₫</span>
-                                        <small class="text-secondary" style="font-size: 0.75rem;">{{ date('d/m', strtotime($item['favorite_at'])) }}</small>
-                                    </div>
-                                    
-                                    <div class="d-grid">
-                                        <a href="/cart/add/{{ $item['id'] }}" class="btn btn-outline-primary fw-semibold">
-                                            <i class="bi bi-cart-plus me-1"></i> Thêm vào giỏ
-                                        </a>
-                                    </div>
-                                </div>
+                        </a>
+
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="fw-bold text-truncate mb-1" title="{{ $item['name'] }}">
+                                <a href="/product/detail/{{ $item['id'] }}" class="text-decoration-none text-dark">{{ $item['name'] }}</a>
+                            </h6>
+                            <p class="small text-muted flex-grow-1 mb-2">{{ substr($item['mota'] ?? '', 0, 70) }}...</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-danger">{{ number_format($item['price'], 0, ',', '.') }}đ</span>
+                                <small class="text-muted">{{ date('d/m', strtotime($item['favorite_at'])) }}</small>
                             </div>
+                            <a href="/cart/add/{{ $item['id'] }}" class="btn btn-outline-primary btn-sm mt-2">
+                                <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                            </a>
                         </div>
                     </div>
-                @endforeach
-            @else
-                <div class="col-12 text-center py-5">
-                    <div class="mb-4">
-                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 100px; height: 100px;">
-                            <i class="bi bi-heart text-secondary" style="font-size: 3rem;"></i>
-                        </div>
-                    </div>
-                    <h4 class="text-muted fw-normal">Danh sách yêu thích trống</h4>
-                    <p class="text-secondary mb-4">Lưu lại những sản phẩm bạn quan tâm để xem lại sau nhé!</p>
-                    <a href="/" class="btn btn-primary px-4 py-2">Tiếp tục mua sắm</a>
                 </div>
-            @endif
-        </div>
-    </main>
+                @endforeach
+            </div>
+        @else
+            <div class="text-center py-5">
+                <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm mb-3"
+                     style="width:90px;height:90px;">
+                    <i class="fas fa-heart text-secondary" style="font-size:2.5rem;"></i>
+                </div>
+                <h5 class="text-muted fw-normal">Danh sách yêu thích trống</h5>
+                <p class="text-secondary">Lưu những sản phẩm bạn quan tâm để xem lại sau!</p>
+                <a href="/" class="btn btn-primary px-4">Tiếp tục mua sắm</a>
+            </div>
+        @endif
 
-    <!-- Footer -->
-    @include('layouts.includes.footer')
-        @include('layouts.includes.notification')
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    </div>
+</div>
+@endsection

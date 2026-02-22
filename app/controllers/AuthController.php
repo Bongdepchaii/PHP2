@@ -118,7 +118,7 @@ class AuthController extends Controller
             $email = trim($_POST['email']); 
             $age = trim($_POST['age']);
             $sex = trim($_POST['sex']);
-            $address = trim($_POST['address']);
+            // $address = trim($_POST['address']);
             $phone = isset($_POST['phone']) ? trim($_POST['phone']) : ''; 
 
             if (empty($name) || empty($email)) {
@@ -129,7 +129,7 @@ class AuthController extends Controller
                     'email' => $email, 
                     'age' => $age,
                     'sex' => $sex,
-                    'address' => $address,
+                    // 'address' => $address,
                     // 'phone' => $phone 
                 ];
 
@@ -141,16 +141,35 @@ class AuthController extends Controller
         }
 
         $this->view("users/profile", [
-            'title' => $title,
-            'user' => $user
+            'title'     => $title,
+            'user'      => $user,
+            'addresses' => $this->model('address')->getByUserId($_SESSION['user_id']),
+            'orders'    => $this->model('order')->getByUser($_SESSION['user_id']),
         ]);
     }
 
     public function logout()
     {
+        // Chỉ xóa các session key liên quan đến tài khoản user
+        // Giữ lại các session khác như recently_viewed (thuộc về trình duyệt)
+        $keepKeys = ['recently_viewed'];
+        $kept = [];
+        foreach ($keepKeys as $key) {
+            if (isset($_SESSION[$key])) {
+                $kept[$key] = $_SESSION[$key];
+            }
+        }
+
+        // Hủy toàn bộ session
         session_unset();
         session_destroy();
-        session_start(); 
+
+        // Khởi động session mới và khôi phục các key cần giữ
+        session_start();
+        foreach ($kept as $key => $value) {
+            $_SESSION[$key] = $value;
+        }
+        $_SESSION['success'] = "Đăng xuất thành công";
         $this->redirect('/');
     }
 
@@ -210,13 +229,13 @@ class AuthController extends Controller
         $subject = 'Mã OTP đặt lại mật khẩu - TBS Shop';
         $content = '
             <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 30px; background: #f9f9f9; border-radius: 10px;">
-                <h2 style="color: #667eea; text-align:center;">🔐 Đặt lại mật khẩu</h2>
+                <h2 style="color: #667eea; text-align:center;">Đặt lại mật khẩu</h2>
                 <p>Xin chào <strong>' . htmlspecialchars($user['name']) . '</strong>,</p>
                 <p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.</p>
                 <div style="text-align:center; margin: 25px 0;">
                     <span style="font-size: 2.5rem; font-weight: bold; letter-spacing: 10px; color: #764ba2; background: #ede9ff; padding: 15px 25px; border-radius: 12px; display: inline-block;">' . $otp . '</span>
                 </div>
-                <p style="text-align:center; color: #888; font-size: 0.9rem;">⏰ Mã có hiệu lực trong <strong>5 phút</strong>.</p>
+                <p style="text-align:center; color: #888; font-size: 0.9rem;">Mã có hiệu lực trong <strong>5 phút</strong>.</p>
                 <p style="color: #e74c3c; font-size: 0.85rem;">Nếu bạn không yêu cầu điều này, hãy bỏ qua email này.</p>
             </div>';
 

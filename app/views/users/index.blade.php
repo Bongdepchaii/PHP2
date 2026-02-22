@@ -14,7 +14,7 @@
                     <i class="feather-user-plus me-1"></i> Tạo người dùng
                 </a>
             </div>
-            @include('layouts.includes.alert')
+              @include('layouts.includes.notification')
             <div class="card-body custom-card-action p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">

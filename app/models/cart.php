@@ -23,7 +23,7 @@ class Cart extends Model
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         $stmt->execute([
-            'id_user' => $userId,
+            'id_user'    => $userId,
             'id_product' => $productId
         ]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -35,9 +35,9 @@ class Cart extends Model
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
-            'id_user' => $data['id_user'],
+            'id_user'    => $data['id_user'],
             'id_product' => $data['id_product'],
-            'quantity' => $data['quantity']
+            'quantity'   => $data['quantity']
         ]);
     }
 
@@ -47,7 +47,7 @@ class Cart extends Model
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
             'quantity' => $quantity,
-            'id' => $id
+            'id'       => $id
         ]);
     }
 
@@ -55,9 +55,15 @@ class Cart extends Model
         $sql = "DELETE FROM $this->table WHERE id = :id";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
-        return $stmt->execute([
-            'id' => $id
-        ]);
+        return $stmt->execute(['id' => $id]);
+    }
+
+    // Xóa toàn bộ giỏ hàng của user sau khi đặt hàng thành công
+    public function deleteByUser($userId) {
+        $sql = "DELETE FROM $this->table WHERE id_user = :id_user";
+        $conn = $this->connect();
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute(['id_user' => $userId]);
     }
 }
 ?>

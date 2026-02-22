@@ -12,7 +12,7 @@
                     <i class="feather-plus me-1"></i> Thêm màu sắc
                 </a>
             </div>
-                        @include('layouts.includes.alert')
+            @include('layouts.includes.notification')
             <div class="card-body custom-card-action p-0">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">

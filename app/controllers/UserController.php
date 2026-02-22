@@ -92,13 +92,15 @@ class UserController extends Controller
         } else {
             $favoriteModel = $this->model('favorite');
             $favorites = $favoriteModel->getFavoritesByUserId($_SESSION['user_id']);
+            $user      = $this->model('user')->find($_SESSION['user_id']);
             $title = "Sản phẩm yêu thích";
             $this->view("users/favorite", [
-                'title' => $title,
-                'favorites' => $favorites
+                'title'     => $title,
+                'favorites' => $favorites,
+                'user'      => $user,
             ]);
         }
-    } 
+    }
 
     public function deleteFavorite($id)
     {
@@ -136,5 +138,63 @@ class UserController extends Controller
         } else {
             $this->redirect('/');
         }
+    }
+
+    // Thêm địa chỉ mới cho user đang đăng nhập
+    public function addAddress()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('/auth/login');
+            return;
+        }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $label    = trim($_POST['label']    ?? 'Nhà riêng');
+            $receiver = trim($_POST['receiver'] ?? '');
+            $phone    = trim($_POST['phone']    ?? '');
+            $address  = trim($_POST['address']  ?? '');
+
+            if (!empty($receiver) && !empty($phone) && !empty($address)) {
+                $addressModel = $this->model('address');
+                $addressModel->create([
+                    'user_id'    => $_SESSION['user_id'],
+                    'label'      => $label,
+                    'receiver'   => $receiver,
+                    'phone'      => $phone,
+                    'address'    => $address,
+                    'is_default' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                ]);
+                $_SESSION['success'] = "Thêm địa chỉ thành công";
+            } else {
+                $_SESSION['error'] = "Vui lòng điền đầy đủ thông tin địa chỉ";
+            }
+        }
+        $this->redirect('/auth/profile');
+    }
+
+    // Xóa địa chỉ (chỉ xóa được địa chỉ của chính mình)
+    public function deleteAddress($id)
+    {
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('/auth/login');
+            return;
+        }
+        $addressModel = $this->model('address');
+        $addressModel->delete($id, $_SESSION['user_id']);
+        $_SESSION['success'] = "Đã xóa địa chỉ";
+        $this->redirect('/auth/profile');
+    }
+
+    // Đặt địa chỉ mặc định
+    public function setDefaultAddress($id)
+    {
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('/auth/login');
+            return;
+        }
+        $addressModel = $this->model('address');
+        $addressModel->setDefault($id, $_SESSION['user_id']);
+        $_SESSION['success'] = "Đã đặt địa chỉ mặc định";
+        $this->redirect('/auth/profile');
     }
 }

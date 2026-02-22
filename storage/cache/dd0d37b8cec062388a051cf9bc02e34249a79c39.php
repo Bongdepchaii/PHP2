@@ -7,6 +7,7 @@
     <title><?php echo $__env->yieldContent('title'); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="/assets/images/LogoTBS.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
 
@@ -17,20 +18,13 @@
 
     <!-- Main -->
     <main class="container py-4">
-        <div class="row g-4">
-            <!-- Sidebar Categories -->
-            <?php echo $__env->make('layouts.includes.slidebar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-            <!-- Products -->
-            <section class="col-12 col-lg-9">
-                <?php echo $__env->yieldContent('content'); ?>
-            </section>
-
-        </div>
+        <?php echo $__env->yieldContent('content'); ?>
     </main>
     <?php echo $__env->make('layouts.includes.footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <?php echo $__env->make('layouts.includes.notification', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <?php echo $__env->yieldPushContent('modals'); ?>
     <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 
