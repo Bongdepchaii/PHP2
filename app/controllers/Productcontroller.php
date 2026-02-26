@@ -9,23 +9,42 @@ class Productcontroller extends Controller
     // }
     public function index()
     {
-        $productModel = $this->model('product');
-        $categoryModel = $this->model('category');
-        $colorModel = $this->model('color');
+        $productModel   = $this->model('product');
+        $categoryModel  = $this->model('category');
+        $colorModel     = $this->model('color');
         $trademarkModel = $this->model('trademark');
+        $romModel       = $this->model('rom');
+        $keyword  = trim($_GET['q']    ?? '');
+        $page     = max(1, (int)($_GET['page'] ?? 1));
+        $perPage  = 10;
 
-        $products = $productModel->all();
+        $products  = $productModel->search($keyword, $page, $perPage);
+        $total     = $productModel->countSearch($keyword);
+        $totalPage = (int)ceil($total / $perPage);
+        
+        $variantModel = $this->model('variant');
+        foreach ($products as &$product) {
+            $product['variants'] = $variantModel->getByProductId($product['id']);
+        }
+
         $categories = $categoryModel->all();
-        $colors = $colorModel->all();
+        $colors     = $colorModel->all();
         $trademarks = $trademarkModel->all();
+        $roms       = $romModel->all();
 
-        $title = "Quản lý sản phẩm";
         $this->view("products/index", [
-            'title' => $title,
-            'products' => $products,
+            'title'      => 'Quản lý sản phẩm',
+            'products'   => $products,
             'categories' => $categories,
-            'colors' => $colors,
-            'trademarks' => $trademarks
+            'colors'     => $colors,
+            'trademarks' => $trademarks,
+            'roms'       => $roms,
+            // Phân trang & tìm kiếm
+            'keyword'    => $keyword,
+            'page'       => $page,
+            'perPage'    => $perPage,
+            'total'      => $total,
+            'totalPage'  => $totalPage,
         ]);
     }
 
@@ -76,7 +95,7 @@ class Productcontroller extends Controller
 
             if (!empty($name)) {
                 $productModel = $this->model('product');
-                $productModel->create([
+                $newProductId = $productModel->create([
                     'name' => $name,
                     'price' => $price,
                     'img' => $imgJson,
@@ -87,6 +106,28 @@ class Productcontroller extends Controller
                     'id_trademark' => $id_trademark,
                     'id_color' => $id_color
                 ]);
+
+                // add variant if exist22222222222222222222222222222
+                if ($newProductId && isset($_POST['variant_id_color'])) {
+                    $variantModel = $this->model('variant');
+                    $variantColors = $_POST['variant_id_color'];
+                    $variantRoms   = $_POST['variant_id_rom'];
+                    $variantPrices = $_POST['variant_price'];
+                    $variantQties  = $_POST['variant_quantity'];
+
+                    for ($i = 0; $i < count($variantColors); $i++) {
+                        if (!empty($variantColors[$i]) && !empty($variantRoms[$i])) {
+                            $variantModel->create([
+                                'id_product' => $newProductId,
+                                'id_color'   => $variantColors[$i],
+                                'id_rom'     => $variantRoms[$i],
+                                'price'      => $variantPrices[$i] ?? 0,
+                                'quantity'   => $variantQties[$i] ?? 0
+                            ]);
+                        }
+                    }
+                }
+
                 $_SESSION['success'] = "Thêm sản phẩm thành công";
             }
             $this->redirect('/product/');
@@ -176,8 +217,34 @@ class Productcontroller extends Controller
                     'mota' => $mota,
                     'id_category' => $id_category,
                     'id_trademark' => $id_trademark,
-                    'id_color' => $id_color
+                    'id_color' => $id_color ? $id_color : null
                 ], $id);
+
+                // --- XỬ LÝ VARIANT KHI UPDATE ---
+                $variantModel = $this->model('variant');
+                // Xoá toàn bộ variant cũ của sản phẩm này
+                $variantModel->deleteByProductId($id);
+
+                // Thêm lại các variant mới (nếu có push lên từ form)
+                if (isset($_POST['variant_id_color'])) {
+                    $variantColors = $_POST['variant_id_color'];
+                    $variantRoms   = $_POST['variant_id_rom'];
+                    $variantPrices = $_POST['variant_price'];
+                    $variantQties  = $_POST['variant_quantity'];
+
+                    for ($i = 0; $i < count($variantColors); $i++) {
+                        if (!empty($variantColors[$i]) && !empty($variantRoms[$i])) {
+                            $variantModel->create([
+                                'id_product' => $id,
+                                'id_color'   => $variantColors[$i],
+                                'id_rom'     => $variantRoms[$i],
+                                'price'      => $variantPrices[$i] ?? 0,
+                                'quantity'   => $variantQties[$i] ?? 0
+                            ]);
+                        }
+                    }
+                }
+
                 $_SESSION['success'] = "Cập nhật thành công";
             }
         }
@@ -215,25 +282,35 @@ class Productcontroller extends Controller
             return;
         }
 
+        // --- LẤY BIẾN THỂ VÀ DANH SÁCH MÀU, ROM ---
+        $variantModel = $this->model('variant');
+        $variants = $variantModel->getByProductId($id);
+        
+        $colorModel = $this->model('color');
+        $romModel   = $this->model('rom');
+        
+        $allColors = $colorModel->all();
+        $allRoms   = $romModel->all();
+
         // Save Session
         $recentlyViewed = $_SESSION['recently_viewed'] ?? [];
 
-        // Bước 2: Xoá ID hiện tại nếu đã có trong danh sách (tránh trùng)
+        // xoa id hien tai neu da co trong danh sach
         $recentlyViewed = array_values(array_filter($recentlyViewed, fn($i) => $i != $id));
 
-        // Bước 3: Thêm ID sản phẩm hiện tại lên đầu danh sách
+        // them id sp hien tai vao danh sach
         array_unshift($recentlyViewed, (int)$id);
 
-        // Bước 4: Giới hạn tối đa 5 sản phẩm trong danh sách
+        // gioi han toi da 5 sp ds
         $recentlyViewed = array_slice($recentlyViewed, 0, 5);
 
-        // Bước 5: Lưu lại vào session
+        // luu session
         $_SESSION['recently_viewed'] = $recentlyViewed;
 
-        // Bước 6: Lấy ID các sản phẩm đã xem TRƯỚC ĐÓ (bỏ sản phẩm hiện tại)
+        // Bước 6: lay id sp da xem
         $recentIds = array_values(array_filter($recentlyViewed, fn($i) => $i != $id));
 
-        // Bước 7: Truy vấn dữ liệu sản phẩm đã xem từ DB
+        // truy van du lieu da xem db
         $recentProducts = !empty($recentIds) ? $productModel->findByIds($recentIds) : [];
 
         // nhan san pham lien quan
@@ -244,7 +321,10 @@ class Productcontroller extends Controller
             'title' => $title,
             'product' => $product,
             'relatedProducts' => $relatedProducts,
-            'recentProducts' => $recentProducts
+            'recentProducts' => $recentProducts,
+            'variants' => $variants,
+            'allColors' => $allColors,
+            'allRoms' => $allRoms
         ]);
     }
 

@@ -62,7 +62,7 @@
                             <div class="text-center text-muted mb-3 small" style="font-size: 0.8rem;">HOẶC</div>
                             
                             <div class="d-grid gap-2 mb-3">
-                                <a href="#" class="btn btn-outline-danger btn-sm fw-semibold py-2">
+                                <a href="/auth/googleLogin" class="btn btn-outline-danger btn-sm fw-semibold py-2">
                                     <i class="fab fa-google me-2"></i> Đăng nhập với Google
                                 </a>
                             </div>

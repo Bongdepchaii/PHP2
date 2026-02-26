@@ -31,7 +31,7 @@ class AuthController extends Controller
                     // $_SESSION['success'] = "Đăng nhập thành công";
                     
                     if ($user['role'] == 'admin') {
-                        $this->redirect('/category');
+                        $this->redirect('/dashboard');
                     } else {
                         $this->redirect('/home/index');
                     }
@@ -177,10 +177,6 @@ class AuthController extends Controller
     // QUÊN MẬT KHẨU - OTP
     // ========================
 
-    /**
-     * Hiển thị trang quên mật khẩu
-     * URL: GET /auth/forgot
-     */
     public function forgot()
     {
         if (isset($_SESSION['user_id'])) {
@@ -189,10 +185,7 @@ class AuthController extends Controller
         $this->view('users/forgot', []);
     }
 
-    /**
-     * Gửi mã OTP về email người dùng
-     * URL: POST /auth/sendOtp
-     */
+    // send otp
     public function sendOtp()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -214,18 +207,18 @@ class AuthController extends Controller
             $this->redirect('/auth/forgot');
         }
 
-        // Tạo mã OTP 6 số ngẫu nhiên (lưu dạng int)
+        // tao ma otp 6 so radom
         $otp = random_int(100000, 999999);
-        // end_otp kiểu TIME → lưu giờ hết hạn (5 phút sau)
+        // end_otp kieu TIME → het han 5 p
         $expiry = date('H:i:s', strtotime('+5 minutes'));
 
-        // Lưu OTP vào database
+        // luu otp vao database
         $userModel->saveOtp($email, $otp, $expiry);
 
-        // Lưu email vào session để hiển thị ở trang OTP
+        // luu email vao session de hien thi o trang OTP
         $_SESSION['otp_email'] = $email;
 
-        // Gửi mail
+        // gui mail
         $subject = 'Mã OTP đặt lại mật khẩu - TBS Shop';
         $content = '
             <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 30px; background: #f9f9f9; border-radius: 10px;">
@@ -252,10 +245,7 @@ class AuthController extends Controller
         $this->redirect('/auth/forgot');
     }
 
-    /**
-     * Xác nhận mã OTP người dùng nhập
-     * URL: POST /auth/verifyOtp
-     */
+    // xac nhan otp
     public function verifyOtp()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -279,7 +269,7 @@ class AuthController extends Controller
             $this->redirect('/auth/forgot');
         }
 
-        // Kiểm tra hết hạn: end_otp kiểu TIME, so sánh với giờ hiện tại
+        // kiem tra het han
         $now     = date('H:i:s');
         $endOtp  = $user['end_otp'];
         if ($now > $endOtp) {
@@ -288,7 +278,7 @@ class AuthController extends Controller
             $this->redirect('/auth/forgot');
         }
 
-        // OTP hợp lệ → Lưu user_id vào session, xoá OTP
+        // OTP hop le → luu user_id vao session, xoa OTP
         $_SESSION['reset_user_id'] = $user['id'];
         $userModel->clearOtp($user['id']);
         $_SESSION['otp_verified'] = true;
@@ -297,10 +287,7 @@ class AuthController extends Controller
         $this->redirect('/auth/forgot');
     }
 
-    /**
-     * Cập nhật mật khẩu mới
-     * URL: POST /auth/resetPassword
-     */
+    // cap nhat mat khau
     public function resetPassword()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -334,12 +321,93 @@ class AuthController extends Controller
             'password' => password_hash($newPassword, PASSWORD_DEFAULT),
         ], $userId);
 
-        // Xoá session reset
+        // xoa session reset
         unset($_SESSION['reset_user_id']);
         unset($_SESSION['otp_verified']);
         unset($_SESSION['otp_email']);
 
         $_SESSION['success'] = 'Đặt lại mật khẩu thành công! Vui lòng đăng nhập.';
         $this->redirect('/auth/login');
+    }
+
+    // LOGIN GOOGLE
+    public function googleLogin()
+    {
+        $client = new Google\Client();
+        $client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
+        $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
+        $client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URL']);
+        $client->addScope("email");
+        $client->addScope("profile");
+
+        $authUrl = $client->createAuthUrl();
+        header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
+        exit;
+    }
+
+    public function googleCallback()
+    {
+        $client = new Google\Client();
+        $client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
+        $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
+        $client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URL']);
+
+        if (isset($_GET['code'])) {
+            $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+            if (isset($token['error'])) {
+                $_SESSION['error'] = "Không thể đăng nhập bằng Google.";
+                $this->redirect('/auth/login');
+                return;
+            }
+            $client->setAccessToken($token);
+
+            $googleService = new Google\Service\Oauth2($client);
+            $googleUser = $googleService->userinfo->get();
+
+            $email = $googleUser->email;
+            $name = $googleUser->name;
+            $googleId = $googleUser->id;
+
+            $userModel = $this->model('user');
+            $user = $userModel->findByGoogleId($googleId);
+
+            if (!$user) {
+                // Kiểm tra xem email đã tồn tại chưa
+                $user = $userModel->findByEmail($email);
+                if ($user) {
+                    // Liên kết google_id vào user có sẵn
+                    $userModel->update(['google_id' => $googleId], $user['id']);
+                } else {
+                    // Tạo user mới
+                    $userModel->create([
+                        'username' => $email,
+                        'password' => '',
+                        'email'    => $email,
+                        'name'     => $name,
+                        'sex'      => 'Other',
+                        'age'      => 0,
+                        'address'  => '',
+                        'role'     => 'user',
+                        'google_id'=> $googleId,
+                        'created_at' => date('Y-m-d H:i:s')
+                    ]);
+                    $user = $userModel->findByGoogleId($googleId);
+                }
+            }
+
+            // Đăng nhập session
+            $_SESSION['user_id']   = $user['id'];
+            $_SESSION['user_name'] = $user['name'];
+            $_SESSION['role']      = $user['role'];
+            $_SESSION['email']     = $user['email'];
+
+            if ($user['role'] == 'admin') {
+                $this->redirect('/dashboard');
+            } else {
+                $this->redirect('/home/index');
+            }
+        } else {
+            $this->redirect('/auth/login');
+        }
     }
 }

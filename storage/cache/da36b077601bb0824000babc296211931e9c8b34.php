@@ -16,7 +16,7 @@
                         <label>Điều hướng</label>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
+                        <a href="/dashboard" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-airplay"></i></span>
                             <span class="nxl-mtext">Bảng điều khiển</span>
                         </a>
@@ -27,7 +27,10 @@
                             <a href="/product" class="nxl-mtext">Sản phẩm</a><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </div>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="/color">Màu sắc</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="/color"><span class="nxl-micon"><i class="feather-palette"></i></span>Màu sắc</a></li>
+                        </ul>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="/rom"><span class="nxl-micon"><i class="feather-hard-drive"></i></span>Bộ nhớ</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
@@ -52,6 +55,12 @@
                         <a href="/contact/admin" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-message-circle"></i></span>
                             <span class="nxl-mtext">Liên hệ</span>
+                        </a>
+                    </li>
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="/order/index" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-clipboard"></i></span>
+                            <span class="nxl-mtext">Đơn hàng</span>
                         </a>
                     </li>
                     <li class="nxl-item nxl-hasmenu">

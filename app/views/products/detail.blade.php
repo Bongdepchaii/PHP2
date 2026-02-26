@@ -59,8 +59,51 @@
                             {{ $product['mota'] ?? 'Chưa có mô tả cho sản phẩm này.' }}
                         </p>
 
+                        <!-- Chọn Option (Variants) -->
+                        <div class="mb-4">
+                            @if(isset($variants) && count($variants) > 0)
+                                @php
+                                    // Tạo mảng unique color và rom để hiển thị
+                                    $availableColors = [];
+                                    $availableRoms = [];
+                                    foreach($variants as $v) {
+                                        if(!in_array($v['id_color'], array_column($availableColors, 'id'))) {
+                                            $colName = '';
+                                            foreach($allColors as $c) { if($c['id'] == $v['id_color']) { $colName = $c['name']; break; } }
+                                            $availableColors[] = ['id' => $v['id_color'], 'name' => $colName];
+                                        }
+                                        if(!in_array($v['id_rom'], array_column($availableRoms, 'id'))) {
+                                            $romName = '';
+                                            foreach($allRoms as $r) { if($r['id'] == $v['id_rom']) { $romName = $r['name']; break; } }
+                                            $availableRoms[] = ['id' => $v['id_rom'], 'name' => $romName];
+                                        }
+                                    }
+                                @endphp
+                                
+                                <label class="fw-bold mb-2">Chọn màu sắc:</label>
+                                <div class="d-flex gap-2 mb-3 flex-wrap" id="colorOptions">
+                                    @foreach($availableColors as $c)
+                                        <button type="button" class="btn btn-outline-secondary btn-color-select variant-btn" data-type="color" data-id="{{ $c['id'] }}">
+                                            {{ $c['name'] }}
+                                        </button>
+                                    @endforeach
+                                </div>
+
+                                <label class="fw-bold mb-2">Chọn phiên bản (ROM):</label>
+                                <div class="d-flex gap-2 mb-3 flex-wrap" id="romOptions">
+                                    @foreach($availableRoms as $r)
+                                        <button type="button" class="btn btn-outline-secondary btn-rom-select variant-btn" data-type="rom" data-id="{{ $r['id'] }}">
+                                            {{ $r['name'] }}
+                                        </button>
+                                    @endforeach
+                                </div>
+                                <div id="variantAlert" class="text-danger small fw-bold mb-2 d-none">Vui lòng chọn đầy đủ Màu sắc và ROM!</div>
+                            @endif
+                        </div>
+
                         <div class="d-flex gap-2 mb-4">
-                             <a href="/cart/add/{{ $product['id'] }}" class="btn btn-primary btn-lg px-4">
+                             <!-- Thay the link bang the action form hoac js, o day se ap dung JS -->
+                             <a href="javascript:voild(0);" onclick="addToCart(event, {{ $product['id'] }})" class="btn btn-primary btn-lg px-4" id="btnAddToCart">
                                 <i class="fas fa-cart-plus me-2"></i> Thêm vào giỏ
                             </a>
                             <a href="/user/addFavorite/{{ $product['id'] }}" class="btn btn-outline-danger btn-lg" title="Yêu thích">
@@ -114,7 +157,7 @@
     </div>
 </div>
 
-<!-- Da xem gan day  -->
+
 @if(isset($recentProducts) && count($recentProducts) > 0)
 <div class="row mt-4">
     <div class="col-12">
@@ -160,5 +203,110 @@
 <style>
     .cursor-pointer { cursor: pointer; }
     .cursor-pointer:hover { border-color: #0d6efd !important; }
+    .variant-btn.active {
+        background-color: #0d6efd !important;
+        color: white !important;
+        border-color: #0d6efd !important;
+    }
 </style>
+
+<script>
+    // du lieu sang ajax
+    const variants = {!! json_encode($variants ?? []) !!};
+    const defaultPrice = {{ $product['price'] }};
+    const defaultQuantity = {{ $product['quantity'] }};
+    const hasVariants = variants.length > 0;
+    
+    let selectedColor = null;
+    let selectedRom = null;
+
+    // xu ly click variant
+    document.querySelectorAll('.variant-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const type = this.getAttribute('data-type');
+            const id = this.getAttribute('data-id');
+
+            // xoa active
+            document.querySelectorAll(`.variant-btn[data-type="${type}"]`).forEach(b => b.classList.remove('active'));
+            // them active
+            this.classList.add('active');
+
+            if(type === 'color') selectedColor = id;
+            if(type === 'rom') selectedRom = id;
+
+            checkAndUpdatePrice();
+        });
+    });
+
+    function checkAndUpdatePrice() {
+        if (!hasVariants) return; // Nếu ko có variant thì ko lam gi
+
+        // an canh bao
+        document.getElementById('variantAlert').classList.add('d-none');
+        
+        let foundVariant = null;
+
+        // neu da chon du ca 2
+        if (selectedColor && selectedRom) {
+            foundVariant = variants.find(v => v.id_color == selectedColor && v.id_rom == selectedRom);
+        } else if (selectedColor && !selectedRom) {
+            // truong hop user chi can chon mau (khong co rom)
+            foundVariant = variants.find(v => v.id_color == selectedColor);
+        } else if (!selectedColor && selectedRom) {
+             foundVariant = variants.find(v => v.id_rom == selectedRom);
+        }
+
+        const priceEl = document.querySelector('.text-danger.fw-bold.me-3');
+        const badgeEl = document.querySelector('.badge.bg-success, .badge.bg-danger');
+        const qtyEl = document.querySelector('.fs-5');
+
+        if (foundVariant) {
+            const finalPrice = foundVariant.price && foundVariant.price > 0 ? foundVariant.price : defaultPrice;
+            priceEl.innerHTML = new Intl.NumberFormat('vi-VN').format(finalPrice) + 'đ';
+            
+            // inner text check quantity variant
+            if (foundVariant.quantity > 0) {
+                badgeEl.className = "badge bg-success";
+                badgeEl.innerText = "Còn hàng";
+            } else {
+                badgeEl.className = "badge bg-danger";
+                badgeEl.innerText = "Hết hàng";
+            }
+        } else {
+            priceEl.innerHTML = new Intl.NumberFormat('vi-VN').format(defaultPrice) + 'đ';
+            qtyEl.innerHTML = `Số lượng: ${defaultQuantity}`;
+            if (selectedColor && selectedRom) {
+               // da chon du nhung ko thay trong db
+               badgeEl.className = "badge bg-danger";
+               badgeEl.innerText = "Hết hàng/Ngừng kinh doanh bản này";
+            }
+        }
+    }
+
+    function addToCart(e, productId) {
+        if (hasVariants) {
+            const needsColor = document.getElementById('colorOptions') !== null;
+            const needsRom = document.getElementById('romOptions') !== null;
+
+            let missingOption = false;
+            if (needsColor && !selectedColor) missingOption = true;
+            if (needsRom && !selectedRom) missingOption = true;
+
+            if (missingOption) {
+                e.preventDefault();
+                // hien thi canh bao
+                document.getElementById('variantAlert').classList.remove('d-none');
+                return false;
+            }
+            
+            // tim variant id
+            const variantId = variants.find(v => v.id_color == selectedColor && v.id_rom == selectedRom)?.id || '';
+            // them query params hoac chuyen huong URL
+            window.location.href = `/cart/add/${productId}?variant_id=${variantId}`;
+        } else {
+            // san pham thong thuong
+            window.location.href = `/cart/add/${productId}`;
+        }
+    }
+</script>
 @endpush

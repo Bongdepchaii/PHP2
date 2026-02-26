@@ -1,3 +1,4 @@
+
 <aside class="col-12 col-lg-4 mt-5">
   <div class="card shadow-sm border-0 rounded-3 mb-3">
     <div class="card-header bg-white py-3">
@@ -12,7 +13,7 @@
       </div>
       <div class="d-flex justify-content-between mb-2">
         <span class="text-muted">Tổng số lượng:</span>
-        <span class="fw-semibold">{{ array_sum(array_column($cart, 'quantity')) }} cái</span>
+        <span class="fw-semibold" id="sidebar-count">{{ array_sum(array_column($cart, 'quantity')) }} cái</span>
       </div>
       <div class="d-flex justify-content-between mb-3">
         <span class="text-muted">Tạm tính:</span>
@@ -94,7 +95,7 @@
           <div class="border rounded-3 p-3 d-flex justify-content-between align-items-center">
             <div>
               <span class="fw-bold text-success d-block">{{ $v['id'] }}</span>
-              <small class="text-muted">{{ $v['name'] }} — Giảm {{ number_format($v['value'], 0, ',', '.') }}đ</small>
+              <small class="text-muted">{{ $v['name'] }} — Giảm {{ number_format($v['value'], 0, ',', '.') }}%</small>
               <small class="text-muted d-block">HSD: {{ date('d/m/Y', strtotime($v['end_date'])) }} | Còn {{ $v['quanity'] }} lượt</small>
             </div>
             <form action="/cart/applyVoucher" method="POST">

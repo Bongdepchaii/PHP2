@@ -24,14 +24,15 @@ class Variant extends Model
 
     public function create($data = [])
     {
-        $sql = "insert into $this->table (colorId, sizeId, quantity, image) VALUES (:colorId, :sizeId, :quantity, :image)";
+        $sql = "insert into $this->table (id_product, id_color, id_rom, price, quantity) VALUES (:id_product, :id_color, :id_rom, :price, :quantity)";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
-            'colorId' => $data['colorId'],
-            'sizeId' => $data['sizeId'],
-            'quantity' => $data['quantity'],
-            'image' => $data['image'],
+            'id_product' => $data['id_product'],
+            'id_color'   => $data['id_color'],
+            'id_rom'     => $data['id_rom'],
+            'price'      => $data['price'],
+            'quantity'   => $data['quantity']
         ]);
     }
 
@@ -54,5 +55,22 @@ class Variant extends Model
         return $stmt->execute([
             'id' => $id
         ]);
+    }
+
+    public function getByProductId($productId)
+    {
+        $sql = "select * from $this->table where id_product = :id_product";
+        $conn = $this->connect();
+        $stmt =  $conn->prepare($sql);
+        $stmt->execute(['id_product' => $productId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function deleteByProductId($productId)
+    {
+        $sql = "delete from $this->table where id_product = :id_product";
+        $conn = $this->connect();
+        $stmt =  $conn->prepare($sql);
+        return $stmt->execute(['id_product' => $productId]);
     }
 }

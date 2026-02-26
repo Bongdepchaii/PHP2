@@ -67,7 +67,7 @@
 <!-- Modal Add -->
 <div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="modalAddLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form action="/category/add" method="POST">
+        <form action="/color/add" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalAddLabel">Thêm màu sắc mới</h5>

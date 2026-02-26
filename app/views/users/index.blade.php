@@ -5,8 +5,8 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="card stretch stretch-full">
-            <div class="card-header border-bottom border-dashed d-flex justify-content-between align-items-center">
-                <div>
+            <div class="card-header border-bottom border-dashed d-flex flex-wrap align-items-center gap-2">
+                <div class="me-auto">
                     <h5 class="card-title mb-1">Danh sách người dùng</h5>
                     <span class="fs-12 text-muted">Quản lý tài khoản và phân quyền truy cập</span>
                 </div>
@@ -126,9 +126,7 @@
                     </table>
                 </div>
             </div>
-            <div class="card-footer border-top-0">
-                <!-- Pagination could go here -->
-            </div>
+           
         </div>
     </div>
 </div>

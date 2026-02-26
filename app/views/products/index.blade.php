@@ -5,8 +5,26 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="card stretch stretch-full">
-            <div class="card-header">
-                <h5 class="card-title">Danh sách sản phẩm</h5>
+            <div class="card-header d-flex align-items-center flex-wrap gap-2">
+                <h5 class="card-title me-auto mb-0">Danh sách sản phẩm
+                    <span class="badge bg-soft-secondary text-secondary ms-2">{{ $total }}</span>
+                </h5>
+                {{-- Search --}}
+                <form method="GET" action="/product" class="d-flex gap-2 align-items-center">
+                    <div class="input-group input-group-sm" style="width:240px;">
+                        <input type="text" class="form-control" name="q"
+                               placeholder="Tìm tên sản phẩm..."
+                               value="{{ $keyword }}">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="feather-search"></i>
+                        </button>
+                        @if($keyword)
+                        <a href="/product" class="btn btn-outline-danger" title="Xóa tìm kiếm">
+                            <i class="feather-x"></i>
+                        </a>
+                        @endif
+                    </div>
+                </form>
                 <a href="javascript:void(0);" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAdd">
                     <i class="feather-plus me-1"></i> Thêm sản phẩm
                 </a>
@@ -74,19 +92,27 @@
                                 </td>
                                 <td class="text-end">
                                     <div class="hstack gap-2 justify-content-end">
-                                        <a href="javascript:void(0);" 
-                                           class="avatar-text avatar-md" 
-                                           data-bs-toggle="modal" 
+                                        @php
+                                            // Giải mã ảnh giống detail.blade.php
+                                            $editImgs    = json_decode($item['img'], true);
+                                            $editMain    = is_array($editImgs) && !empty($editImgs) ? $editImgs[0] : (is_string($item['img']) && !empty($item['img']) ? $item['img'] : '');
+                                            $editGallery = is_array($editImgs) && count($editImgs) > 1 ? array_slice($editImgs, 1) : [];
+                                        @endphp
+                                        <a href="javascript:void(0);"
+                                           class="avatar-text avatar-md"
+                                           data-bs-toggle="modal"
                                            data-bs-target="#modalEdit"
                                            data-id="{{ $item['id'] }}"
                                            data-name="{{ $item['name'] }}"
                                            data-price="{{ $item['price'] }}"
                                            data-quantity="{{ $item['quantity'] ?? '' }}"
                                            data-mota="{{ $item['mota'] ?? '' }}"
-                                           data-img="{{ htmlspecialchars($item['img'], ENT_QUOTES, 'UTF-8') }}"
+                                           data-img-main="{{ $editMain }}"
+                                           data-img-gallery="{{ json_encode($editGallery, JSON_HEX_QUOT | JSON_HEX_APOS) }}"
                                            data-idcategory="{{ $item['id_category'] ?? '' }}"
                                            data-idtrademark="{{ $item['id_trademark'] ?? '' }}"
                                            data-idcolor="{{ $item['id_color'] ?? '' }}"
+                                           data-variants="{{ json_encode($item['variants'] ?? [], JSON_HEX_QUOT | JSON_HEX_APOS) }}"
                                            title="Chỉnh sửa">
                                             <i class="feather-edit text-primary"></i>
                                         </a>
@@ -109,6 +135,40 @@
                     </table>
                 </div>
             </div>
+
+            {{-- Pagination --}}
+            @if($totalPage > 1)
+            <div class="card-footer bg-white d-flex justify-content-between align-items-center flex-wrap gap-2 py-2">
+                <small class="text-muted">
+                    Hiển {{ ($page - 1) * $perPage + 1 }}&ndash;{{ min($page * $perPage, $total) }}
+                    trong tổng {{ $total }} sản phẩm
+                    @if($keyword)<span class="ms-1">cho &ldquo;<strong>{{ $keyword }}</strong>&rdquo;</span>@endif
+                </small>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        {{-- Prev --}}
+                        <li class="page-item {{ $page <= 1 ? 'disabled' : '' }}">
+                            <a class="page-link" href="/product?page={{ $page - 1 }}&q={{ urlencode($keyword) }}">
+                                <i class="feather-chevron-left"></i>
+                            </a>
+                        </li>
+                        {{-- Pages --}}
+                        @for($p = max(1, $page - 2); $p <= min($totalPage, $page + 2); $p++)
+                        <li class="page-item {{ $p === $page ? 'active' : '' }}">
+                            <a class="page-link" href="/product?page={{ $p }}&q={{ urlencode($keyword) }}">{{ $p }}</a>
+                        </li>
+                        @endfor
+                        {{-- Next --}}
+                        <li class="page-item {{ $page >= $totalPage ? 'disabled' : '' }}">
+                            <a class="page-link" href="/product?page={{ $page + 1 }}&q={{ urlencode($keyword) }}">
+                                <i class="feather-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            @endif
+
         </div>
     </div>
 </div>
@@ -183,6 +243,19 @@
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Mô tả</label>
                             <textarea class="form-control" name="mota" rows="4"></textarea>
+                        </div>
+                        
+                        <!-- Biến thể (Variants) -->
+                        <div class="col-md-12 mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label mb-0 fw-bold">Các phiên bản (Variants)</label>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="btnAddVariant">
+                                    <i class="feather-plus"></i> Thêm phiên bản
+                                </button>
+                            </div>
+                            <div id="variantContainer">
+                                <!-- Các dòng variant sẽ được thêm vào đây bằng JS -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -263,6 +336,19 @@
                             <label class="form-label">Mô tả</label>
                             <textarea class="form-control" id="motaEdit" name="mota" rows="4"></textarea>
                         </div>
+
+                        <!-- Edit Biến thể (Variants) -->
+                        <div class="col-md-12 mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label mb-0 fw-bold">Các phiên bản (Variants)</label>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="btnAddVariantEdit">
+                                    <i class="feather-plus"></i> Thêm phiên bản
+                                </button>
+                            </div>
+                            <div id="variantContainerEdit">
+                                <!-- Các dòng variant cũ/mới sẽ được load vào đây khi chọn sản phẩm -->
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -317,6 +403,54 @@
         }
     }
 
+    // Logic xử lý thêm dòng Variant
+    document.getElementById('btnAddVariant').addEventListener('click', function() {
+        const container = document.getElementById('variantContainer');
+        const row = document.createElement('div');
+        row.className = 'row mb-2 align-items-end border p-2 rounded bg-light variant-row';
+        row.innerHTML = `
+            <div class="col-md-3">
+                <label class="form-label small">Màu sắc</label>
+                <select class="form-select form-select-sm" name="variant_id_color[]" required>
+                    <option value="">-- Chọn màu --</option>
+                    @foreach($colors as $col)
+                        <option value="{{ $col['id'] }}">{{ $col['name'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small">ROM/Bộ nhớ</label>
+                <select class="form-select form-select-sm" name="variant_id_rom[]" required>
+                    <option value="">-- Chọn ROM --</option>
+                    @if(isset($roms))
+                        @foreach($roms as $rom)
+                            <option value="{{ $rom['id'] }}">{{ $rom['name'] }}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small">Giá bán</label>
+                <input type="number" class="form-control form-control-sm" name="variant_price[]" value="0" required>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small">Số lượng</label>
+                <input type="number" class="form-control form-control-sm" name="variant_quantity[]" value="0" required>
+            </div>
+            <div class="col-md-1 text-end">
+                <button type="button" class="btn btn-sm btn-outline-danger btnRemoveVariant" title="Xóa">
+                    <i class="feather-trash-2"></i>
+                </button>
+            </div>
+        `;
+        container.appendChild(row);
+
+        // Bắt sự kiện cho nút xóa ở dòng vừa tạo
+        row.querySelector('.btnRemoveVariant').addEventListener('click', function() {
+            row.remove();
+        });
+    });
+
     const modalEdit = document.getElementById('modalEdit');
     modalEdit.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
@@ -335,45 +469,115 @@
         modalEdit.querySelector('#trademarkEdit').value = button.getAttribute('data-idtrademark');
         modalEdit.querySelector('#colorEdit').value = button.getAttribute('data-idcolor');
 
-        // Handle Existing Images Preview
-        const imgData = button.getAttribute('data-img');
-        const previewMain = document.getElementById('previewMainImgEdit');
+        // ---- Hiển thị ảnh (PHP đã tính sẵn, JS chỉ gán src) ----
+        const previewMain    = document.getElementById('previewMainImgEdit');
         const previewGallery = document.getElementById('previewGalleryImgEdit');
-        
-        previewMain.innerHTML = '';
+        previewMain.innerHTML    = '';
         previewGallery.innerHTML = '';
 
-        try {
-            let images = JSON.parse(imgData);
-            if (!Array.isArray(images) && images) images = [images]; // Handle string case
+        // Ảnh chính
+        const mainSrc = button.getAttribute('data-img-main');
+        if (mainSrc) {
+            const mainImg = document.createElement('img');
+            mainImg.src         = '/app/images/img/' + mainSrc;
+            mainImg.className   = 'img-fluid rounded shadow-sm';
+            mainImg.style.maxHeight = '150px';
+            previewMain.appendChild(mainImg);
+        } else {
+            previewMain.innerHTML = '<span class="text-muted small">Không có ảnh cũ</span>';
+        }
 
-            if (images && images.length > 0) {
-                // Main Image (Index 0)
-                const mainImgSrc = "/app/images/img/" + images[0];
-                previewMain.innerHTML = `<img src="${mainImgSrc}" class="img-fluid rounded shadow-sm" style="max-height: 150px;">`;
+        // Ảnh gallery
+        const galleryRaw = button.getAttribute('data-img-gallery');
+        let galleryImgs = [];
+        try { galleryImgs = JSON.parse(galleryRaw) || []; } catch(e) {}
 
-                // Gallery (Index 1+)
-                if (images.length > 1) {
-                    images.slice(1).forEach(img => {
-                         const imgTag = document.createElement('img');
-                        imgTag.src = "/app/images/img/" + img;
-                        imgTag.className = 'rounded shadow-sm border';
-                        imgTag.style.width = '80px';
-                        imgTag.style.height = '80px';
-                        imgTag.style.objectFit = 'cover';
-                        previewGallery.appendChild(imgTag);
-                    });
-                } else {
-                     previewGallery.innerHTML = '<span class="text-muted small w-100 text-center my-auto">Chưa có gallery</span>';
-                }
-            } else {
-                previewMain.innerHTML = '<span class="text-muted small">Không có ảnh cũ</span>';
-                previewGallery.innerHTML = '<span class="text-muted small w-100 text-center my-auto">Chưa có gallery</span>';
-            }
-        } catch (e) {
-            console.error("Error parsing images", e);
-             previewMain.innerHTML = '<span class="text-muted small">Lỗi hiển thị ảnh</span>';
+        if (galleryImgs.length > 0) {
+            galleryImgs.forEach(function(img) {
+                const tag = document.createElement('img');
+                tag.src         = '/app/images/img/' + img;
+                tag.className   = 'rounded shadow-sm border me-1 mb-1';
+                tag.style.cssText = 'width:80px;height:80px;object-fit:cover;';
+                previewGallery.appendChild(tag);
+            });
+        } else {
+            previewGallery.innerHTML = '<span class="text-muted small w-100 text-center my-auto">Chưa có gallery</span>';
+        }
+
+        // --- LOAD DỮ LIỆU VARIANTS CŨ VÀO FORM SỬA ---
+        const variantContainerEdit = document.getElementById('variantContainerEdit');
+        variantContainerEdit.innerHTML = ''; // xóa rỗng lúc trước
+        
+        let variants = [];
+        try { 
+            let vRaw = button.getAttribute('data-variants') || "[]";
+            variants = JSON.parse(vRaw); 
+        } catch(e) {}
+
+        if (variants && variants.length > 0) {
+            variants.forEach(function(v) {
+                appendVariantRowForEdit(variantContainerEdit, v.id_color, v.id_rom, v.price, v.quantity);
+            });
         }
     });
+
+    // --- ADD VARIANT CHO FORM SỬA ---
+    document.getElementById('btnAddVariantEdit').addEventListener('click', function() {
+        const container = document.getElementById('variantContainerEdit');
+        appendVariantRowForEdit(container, "", "", 0, 0);
+    });
+
+    // Utils html cho variant Edit
+    function appendVariantRowForEdit(container, colorId, romId, price, quantity) {
+        const row = document.createElement('div');
+        row.className = 'row mb-2 align-items-end border p-2 rounded bg-light variant-row';
+        
+        // Render thẻ HTML cho select box
+        // Bắt buộc loop màu, rom từ DB để đổ ra option
+        let colorOptions = `<option value="">-- Chọn màu --</option>`;
+        @foreach($colors as $col)
+            colorOptions += `<option value="{{ $col['id'] }}" ${colorId == {{ $col['id'] }} ? 'selected' : ''}>{{ $col['name'] }}</option>`;
+        @endforeach
+        
+        let romOptions = `<option value="">-- Chọn ROM --</option>`;
+        @if(isset($roms))
+            @foreach($roms as $rom)
+                romOptions += `<option value="{{ $rom['id'] }}" ${romId == {{ $rom['id'] }} ? 'selected' : ''}>{{ $rom['name'] }}</option>`;
+            @endforeach
+        @endif
+
+        row.innerHTML = `
+            <div class="col-md-3">
+                <label class="form-label small">Màu sắc</label>
+                <select class="form-select form-select-sm" name="variant_id_color[]" required>
+                    ${colorOptions}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small">ROM/Bộ nhớ</label>
+                <select class="form-select form-select-sm" name="variant_id_rom[]" required>
+                    ${romOptions}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small">Giá bán</label>
+                <input type="number" class="form-control form-control-sm" name="variant_price[]" value="${price}" required>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small">Số lượng</label>
+                <input type="number" class="form-control form-control-sm" name="variant_quantity[]" value="${quantity}" required>
+            </div>
+            <div class="col-md-1 text-end">
+                <button type="button" class="btn btn-sm btn-outline-danger btnRemoveVariantEdit" title="Xóa">
+                    <i class="feather-trash-2"></i>
+                </button>
+            </div>
+        `;
+        container.appendChild(row);
+
+        row.querySelector('.btnRemoveVariantEdit').addEventListener('click', function() {
+            row.remove();
+        });
+    }
 </script>
 @endpush

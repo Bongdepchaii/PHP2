@@ -10,6 +10,21 @@
 
     <!-- Product List -->
     <div class="col-lg-9">
+
+        {{-- Heading khi search --}}
+        @if($keyword)
+        <div class="d-flex align-items-center mb-3">
+            <h6 class="mb-0 fw-semibold">
+                <i class="fas fa-search me-2 text-primary"></i>
+                Kết quả cho &ldquo;<span class="text-primary">{{ $keyword }}</span>&rdquo;
+            </h6>
+            <span class="badge bg-soft-primary text-primary ms-2">{{ $total }} sản phẩm</span>
+            <a href="/home/index" class="btn btn-sm btn-outline-secondary ms-auto">
+                <i class="fas fa-times me-1"></i>Xóa tìm kiếm
+            </a>
+        </div>
+        @endif
+
         <div class="row g-3">
             @php
             $catMap = array_column($categories, 'name', 'id');
@@ -65,9 +80,43 @@
                 </div>
             </div>
             @endforelse
+        </div>{{-- /row g-3 --}}
+
+        {{-- Pagination --}}
+        <div class="d-flex flex-column align-items-center mt-4 gap-2">
+            @if($totalPage > 1)
+            <nav>
+                <ul class="pagination mb-0">
+                    {{-- Prev --}}
+                    <li class="page-item {{ $page <= 1 ? 'disabled' : '' }}">
+                        <a class="page-link" href="/home/index?page={{ $page - 1 }}&q={{ urlencode($keyword) }}&id_category={{ $selectedCategory }}&id_trademark={{ $selectedTrademark }}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    {{-- Number pages --}}
+                    @for($p = max(1, $page - 2); $p <= min($totalPage, $page + 2); $p++)
+                    <li class="page-item {{ $p === $page ? 'active' : '' }}">
+                        <a class="page-link" href="/home/index?page={{ $p }}&q={{ urlencode($keyword) }}&id_category={{ $selectedCategory }}&id_trademark={{ $selectedTrademark }}">{{ $p }}</a>
+                    </li>
+                    @endfor
+                    {{-- Next --}}
+                    <li class="page-item {{ $page >= $totalPage ? 'disabled' : '' }}">
+                        <a class="page-link" href="/home/index?page={{ $page + 1 }}&q={{ urlencode($keyword) }}&id_category={{ $selectedCategory }}&id_trademark={{ $selectedTrademark }}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            @endif
+            <p class="text-muted small mb-0">
+                Hiển <strong>{{ min(($page - 1) * $perPage + 1, $total) }}&ndash;{{ min($page * $perPage, $total) }}</strong>
+                trong tổng <strong>{{ $total }}</strong> sản phẩm
+                @if($totalPage > 1)· Trang {{ $page }}/{{ $totalPage }}@endif
+            </p>
         </div>
-    </div>
-</div>
+
+    </div>{{-- /col-lg-9 --}}
+</div>{{-- /row --}}
 
 @endsection
 @push('scripts')

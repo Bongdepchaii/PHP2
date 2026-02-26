@@ -12,7 +12,7 @@
                     <i class="feather-plus me-1"></i> Thêm màu sắc
                 </a>
             </div>
-                        <?php echo $__env->make('layouts.includes.alert', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+            <?php echo $__env->make('layouts.includes.notification', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
             <div class="card-body custom-card-action p-0">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
@@ -67,7 +67,7 @@
 <!-- Modal Add -->
 <div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="modalAddLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form action="/category/add" method="POST">
+        <form action="/color/add" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalAddLabel">Thêm màu sắc mới</h5>

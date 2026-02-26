@@ -13,17 +13,19 @@
         </ul>
 
         <div class="d-flex align-items-center gap-3">
-            <form class="d-flex" role="search">
-              <input class="form-control form-control-sm me-2" type="search" placeholder="Tìm kiếm..." />
-              <button class="btn btn-outline-primary btn-sm" type="submit"><i class="fas fa-search"></i></button>
+            <form class="d-flex" role="search" method="GET" action="/home/index">
+              <input class="form-control form-control-sm me-2" type="search" name="q"
+                     placeholder="Tìm kiếm sản phẩm..."
+                     value="<?php echo e($_GET['q'] ?? ''); ?>" />
+              
             </form>
 
             <?php if(isset($_SESSION['user_id'])): ?>
                     <a href="/cart" class="position-relative text-dark text-decoration-none me-2">
                         <i class="fas fa-shopping-cart fs-5"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
-                            12
-                        </span>
+                            3
+                        </span> 
                     </a>
                 
                 <div class="dropdown">
@@ -34,10 +36,11 @@
                         <span class="fw-semibold small d-none d-md-block"><?php echo e($_SESSION['user_name'] ?? 'User'); ?></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/auth/profile">Hồ sơ cá nhân</a></li>
-                        <li><a class="dropdown-item" href="/user/favorite">Yêu thích sản phẩm</a></li>
+                        <li><a class="dropdown-item mt-1" href="/auth/profile">Hồ sơ cá nhân</a></li>
+                        <li><a class="dropdown-item mt-1" href="/user/favorite">Yêu thích sản phẩm</a></li>
+                        <li><a class="dropdown-item mt-1" href="/order/history">Đơn hàng đã đặt</a></li>
                         <?php if($_SESSION['role'] == 'admin'): ?>
-                        <li><a class="dropdown-item mt-2" href="/product">Quản lý sản phẩm</a></li>
+                        <li><a class="dropdown-item mt-1" href="/product">Quản lý</a></li>
                         <?php endif; ?>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="/auth/logout">Đăng xuất</a></li>
@@ -45,8 +48,7 @@
                 </div>
             <?php else: ?>
                 <div class="d-flex gap-2">
-                    <a href="/auth/login" class="btn btn-outline-primary btn-sm fw-semibold">Đăng nhập</a>
-                    <a href="/auth/register" class="btn btn-primary btn-sm fw-semibold">Đăng ký</a>
+                    <a href="/auth/login" class="btn-sm fw-semibold"><i class="fas fa-user link-body-emphasis"></i></a>
                 </div>
             <?php endif; ?>
         </div>

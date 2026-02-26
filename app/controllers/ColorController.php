@@ -25,9 +25,11 @@ class ColorController extends Controller
                 $color->create(array(
                     'name' => $name
                 ));
+                $_SESSION['success'] = "add successful";
                 $this->redirect('/color');
             }
         }
+        $_SESSION['error'] = "add failed";
         $this->redirect('/color');
     }
     public function update($id)
@@ -62,6 +64,6 @@ class ColorController extends Controller
         if ($isSuccess) {
             $_SESSION['success'] = "delete successful";
         }
-        header('location: /color');
+         $this->redirect('/color');
     }
 }

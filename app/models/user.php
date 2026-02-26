@@ -35,20 +35,14 @@ class User extends Model
 
     public function create($data = [])
     {
-        $sql = "insert into $this->table (username, password, email, name, sex, age, address, role, created_at) values(:username, :password, :email, :name, :sex, :age, :address, :role, :created_at)";
+        $columns = implode(', ', array_keys($data));
+        $placeholders = ':' . implode(', :', array_keys($data));
+        
+        $sql = "INSERT INTO $this->table ($columns) VALUES ($placeholders)";
         $conn = $this->connect();
-        $stmt =  $conn->prepare($sql);
-        return $stmt->execute([
-            'username' => $data['username'],
-            'password' => $data['password'],
-            'email' => $data['email'],
-            'name' => $data['name'],
-            'sex' => $data['sex'],
-            'age' => $data['age'],
-            'address' => $data['address'],
-            'role' => $data['role'],
-            'created_at' => $data['created_at'],
-        ]);
+        $stmt = $conn->prepare($sql);
+        
+        return $stmt->execute($data);
     }
 
     public function update($data = [], $id) {
@@ -76,7 +70,7 @@ class User extends Model
 
     public function saveOtp($email, $otp, $expiry)
     {
-        // Cột trong DB: otp (int), end_otp (time)
+        // cot trong DB: otp (int), end_otp (time)
         $sql = "UPDATE $this->table SET otp = :otp, end_otp = :expiry WHERE email = :email";
         $conn = $this->connect();
         $stmt = $conn->prepare($sql);
@@ -111,6 +105,52 @@ class User extends Model
         return $stmt->execute([
             'id' => $id
         ]);
+    }
+
+    // tim kiem + phan trang
+    public function search($keyword = '', $page = 1, $perPage = 10)
+    {
+        $offset = ($page - 1) * $perPage;
+        $conn   = $this->connect();
+        if ($keyword) {
+            $sql  = "SELECT * FROM {$this->table} WHERE name LIKE :kw OR email LIKE :kw2 ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':kw',     '%' . $keyword . '%');
+            $stmt->bindValue(':kw2',    '%' . $keyword . '%');
+            $stmt->bindValue(':limit',  (int)$perPage,  PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset,   PDO::PARAM_INT);
+        } else {
+            $sql  = "SELECT * FROM {$this->table} ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':limit',  (int)$perPage,  PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset,   PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countSearch($keyword = '')
+    {
+        $conn = $this->connect();
+        if ($keyword) {
+            $sql  = "SELECT COUNT(*) as cnt FROM {$this->table} WHERE name LIKE :kw OR email LIKE :kw2";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([':kw' => '%' . $keyword . '%', ':kw2' => '%' . $keyword . '%']);
+        } else {
+            $sql  = "SELECT COUNT(*) as cnt FROM {$this->table}";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+        }
+        return $stmt->fetch(PDO::FETCH_ASSOC)['cnt'] ?? 0;
+    }
+
+    public function findByGoogleId($google_id)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE google_id = :google_id";
+        $conn = $this->connect();
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['google_id' => $google_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
 

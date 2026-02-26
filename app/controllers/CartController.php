@@ -81,20 +81,46 @@ class CartController extends Controller
             echo json_encode(['error' => 'Chưa đăng nhập']);
             return;
         }
-        $qty = (int)($_POST['quantity'] ?? 1);
+        $qty       = (int)($_POST['quantity'] ?? 1);
         if ($qty < 1) $qty = 1;
+        $userId    = $_SESSION['user_id'];
         $cartModel = $this->model('cart');
+
+        // Lấy stock tồn kho của sản phẩm này từ danh sách giỏ hàng
+        $cartItems = $cartModel->findByUser($userId);
+        $stock     = null;
+        foreach ($cartItems as $item) {
+            if ((int)$item['id'] === (int)$cartId) {
+                $stock = (int)$item['stock'];
+                break;
+            }
+        }
+
+        // Validate: không cho vượt quá tồn kho
+        $maxReached = false;
+        if ($stock !== null && $qty > $stock) {
+            $qty        = $stock;
+            $maxReached = true;
+        }
+
         $cartModel->updateQuantity($cartId, $qty);
-        // Tính lại tổng để trả về cho JS cập nhật sidebar
-        $cartItems = $cartModel->findByUser($_SESSION['user_id']);
-        $subtotal  = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cartItems));
+
+        // Tính lại tổng sau khi update
+        $cartItems   = $cartModel->findByUser($userId);
+        $subtotal    = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cartItems));
         $voucherInfo = $_SESSION['voucher'] ?? null;
-        $discount = $voucherInfo ? (int)floor($subtotal * $voucherInfo['value'] / 100) : 0;
+        $discount    = $voucherInfo ? (int)floor($subtotal * $voucherInfo['value'] / 100) : 0;
+        $count       = array_sum(array_column($cartItems, 'quantity'));
+
         header('Content-Type: application/json');
         echo json_encode([
-            'subtotal' => $subtotal,
-            'discount' => $discount,
-            'total'    => max(0, $subtotal - $discount),
+            'count'       => $count,
+            'subtotal'    => $subtotal,
+            'discount'    => $discount,
+            'total'       => max(0, $subtotal - $discount),
+            'qty'         => $qty,
+            'stock'       => $stock,
+            'max_reached' => $maxReached,
         ]);
     }
 
@@ -214,7 +240,7 @@ class CartController extends Controller
 
         if ($result) {
             $_SESSION['success'] = "Đã thêm sản phẩm vào giỏ hàng vui lòng vào giỏ hàng để mua hàng";
-        } else {
+        } else  {
             $_SESSION['error'] = "Lỗi khi thêm vào giỏ hàng";
         }
 

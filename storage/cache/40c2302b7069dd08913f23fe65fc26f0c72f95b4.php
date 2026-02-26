@@ -10,6 +10,21 @@
 
     <!-- Product List -->
     <div class="col-lg-9">
+
+        
+        <?php if($keyword): ?>
+        <div class="d-flex align-items-center mb-3">
+            <h6 class="mb-0 fw-semibold">
+                <i class="fas fa-search me-2 text-primary"></i>
+                Kết quả cho &ldquo;<span class="text-primary"><?php echo e($keyword); ?></span>&rdquo;
+            </h6>
+            <span class="badge bg-soft-primary text-primary ms-2"><?php echo e($total); ?> sản phẩm</span>
+            <a href="/home/index" class="btn btn-sm btn-outline-secondary ms-auto">
+                <i class="fas fa-times me-1"></i>Xóa tìm kiếm
+            </a>
+        </div>
+        <?php endif; ?>
+
         <div class="row g-3">
             <?php
             $catMap = array_column($categories, 'name', 'id');
@@ -66,6 +81,40 @@
             </div>
             <?php endif; ?>
         </div>
+
+        
+        <div class="d-flex flex-column align-items-center mt-4 gap-2">
+            <?php if($totalPage > 1): ?>
+            <nav>
+                <ul class="pagination mb-0">
+                    
+                    <li class="page-item <?php echo e($page <= 1 ? 'disabled' : ''); ?>">
+                        <a class="page-link" href="/home/index?page=<?php echo e($page - 1); ?>&q=<?php echo e(urlencode($keyword)); ?>&id_category=<?php echo e($selectedCategory); ?>&id_trademark=<?php echo e($selectedTrademark); ?>">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    
+                    <?php for($p = max(1, $page - 2); $p <= min($totalPage, $page + 2); $p++): ?>
+                    <li class="page-item <?php echo e($p === $page ? 'active' : ''); ?>">
+                        <a class="page-link" href="/home/index?page=<?php echo e($p); ?>&q=<?php echo e(urlencode($keyword)); ?>&id_category=<?php echo e($selectedCategory); ?>&id_trademark=<?php echo e($selectedTrademark); ?>"><?php echo e($p); ?></a>
+                    </li>
+                    <?php endfor; ?>
+                    
+                    <li class="page-item <?php echo e($page >= $totalPage ? 'disabled' : ''); ?>">
+                        <a class="page-link" href="/home/index?page=<?php echo e($page + 1); ?>&q=<?php echo e(urlencode($keyword)); ?>&id_category=<?php echo e($selectedCategory); ?>&id_trademark=<?php echo e($selectedTrademark); ?>">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <?php endif; ?>
+            <p class="text-muted small mb-0">
+                Hiển <strong><?php echo e(min(($page - 1) * $perPage + 1, $total)); ?>&ndash;<?php echo e(min($page * $perPage, $total)); ?></strong>
+                trong tổng <strong><?php echo e($total); ?></strong> sản phẩm
+                <?php if($totalPage > 1): ?>· Trang <?php echo e($page); ?>/<?php echo e($totalPage); ?><?php endif; ?>
+            </p>
+        </div>
+
     </div>
 </div>
 

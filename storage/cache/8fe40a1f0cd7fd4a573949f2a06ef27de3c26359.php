@@ -1,8 +1,8 @@
 <?php
     $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     $activeTab = $activeTab ?? (
-        str_contains($currentPath, '/user/favorites') ? 'favorites' :
-        (str_contains($currentPath, '/order') ? 'orders' : 'profile')
+        str_contains($currentPath, '/user/favorite') ? 'favorites' :
+        (str_contains($currentPath, '/order/history') ? 'orders' : 'profile')
     );
     $userName  = $user['name'] ?? ($_SESSION['user_name'] ?? 'Người dùng');
     $userEmail = $user['email'] ?? '';
@@ -30,7 +30,7 @@
            class="list-group-item list-group-item-action d-flex align-items-center gap-2 <?php echo e($activeTab === 'favorites' ? 'active' : ''); ?>">
             <i class="fas fa-heart"></i> Sản phẩm yêu thích
         </a>
-        <a href="/auth/profile#orders"
+        <a href="/order/history"
            class="list-group-item list-group-item-action d-flex align-items-center gap-2 <?php echo e($activeTab === 'orders' ? 'active' : ''); ?>">
             <i class="fas fa-box"></i> Đơn hàng của tôi
         </a>

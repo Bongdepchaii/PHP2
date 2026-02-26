@@ -59,7 +59,7 @@ class Voucher extends Model
     
     public function create($data = [])
     {
-        $sql = "insert into $this->table (id_voucher, name, value, quanity, status, created_at, end_date) values(:id_voucher, :name, :value, :quanity, :status, :created_at, :end_date)";
+        $sql = "insert into $this->table (id, name, value, quanity, status, created_at, end_date) values(:id_voucher, :name, :value, :quanity, :status, :created_at, :end_date)";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
@@ -87,7 +87,7 @@ class Voucher extends Model
         }
 
         // Assuming id_voucher is the PK
-        $sql = "update $this->table set " . implode(', ', $setParts) . " where id_voucher = :id_key";
+        $sql = "update $this->table set " . implode(', ', $setParts) . " where id = :id_key";
         
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);

@@ -94,23 +94,7 @@
 
                 <div class="card-body p-4">
 
-                    <?php if(isset($_SESSION['forgot_error'])): ?>
-                    <div class="alert alert-danger alert-dismissible fade show py-2 small">
-                        <?php echo e($_SESSION['forgot_error']); ?>
-
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    <?php unset($_SESSION['forgot_error']); ?>
-                    <?php endif; ?>
-
-                    <?php if(isset($_SESSION['forgot_success'])): ?>
-                    <div class="alert alert-success alert-dismissible fade show py-2 small">
-                        <?php echo e($_SESSION['forgot_success']); ?>
-
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    <?php unset($_SESSION['forgot_success']); ?>
-                    <?php endif; ?>
+                      <?php echo $__env->make('layouts.includes.notification', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
                     
                     <div id="section-email">

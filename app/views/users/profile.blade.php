@@ -55,8 +55,8 @@
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
                 <h6 class="mb-0 fw-bold"><i class="fas fa-map-marker-alt me-2 text-danger"></i>Sổ địa chỉ</h6>
-                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalAddAddress">
-                    <i class="fas fa-plus me-1"></i>Thêm
+                <button class="btn btn-sm btn-success p-2" data-bs-toggle="modal" data-bs-target="#modalAddAddress">
+                    Thêm
                 </button>
             </div>
             <div class="card-body p-0">
@@ -91,65 +91,11 @@
                     </ul>
                 @else
                     <div class="text-center text-muted py-4">
-                        <i class="fas fa-map-marker-alt fs-3 d-block mb-2"></i>
+                        <i class="fas fa-map-marker-alt fs-3 d-block mb-2 p-3 text-secondary"></i>
                         Chưa có địa chỉ nào. Hãy thêm mới!
                     </div>
                 @endif
             </div>
-        </div>
-
-        {{-- ===== ĐƠN HÀNG ===== --}}
-        <div class="card border-0 shadow-sm" id="orders">
-            <div class="card-header bg-white border-bottom py-3">
-                <h6 class="mb-0 fw-bold"><i class="fas fa-box me-2 text-warning"></i>Đơn hàng của tôi</h6>
-            </div>
-            @if(isset($orders) && count($orders) > 0)
-                <div class="list-group list-group-flush">
-                    @foreach($orders as $order)
-                    @php
-                        $statusMap = [
-                            'pending'   => ['label' => 'Chờ xử lý',  'color' => 'warning'],
-                            'confirmed' => ['label' => 'Đã xác nhận','color' => 'info'],
-                            'shipping'  => ['label' => 'Đang giao',  'color' => 'primary'],
-                            'done'      => ['label' => 'Hoàn thành', 'color' => 'success'],
-                            'cancelled' => ['label' => 'Đã hủy',     'color' => 'danger'],
-                        ];
-                        $s = $statusMap[$order['status']] ?? ['label' => $order['status'], 'color' => 'secondary'];
-                    @endphp
-                    <div class="list-group-item p-3">
-                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                            <div>
-                                <span class="fw-bold">#{{ $order['id'] }}</span>
-                                <small class="text-muted ms-2">{{ date('d/m/Y H:i', strtotime($order['created_at'])) }}</small>
-                                <br>
-                                <small><i class="fas fa-map-marker-alt me-1 text-muted"></i>{{ $order['receiver'] }} — {{ $order['phone'] }}</small>
-                                <br>
-                                <small class="text-muted">{{ $order['address'] }}</small>
-                            </div>
-                            <div class="text-end">
-                                <span class="badge bg-{{ $s['color'] }} mb-1 d-block">{{ $s['label'] }}</span>
-                                @if($order['discount'] > 0)
-                                    <small class="text-muted text-decoration-line-through d-block">{{ number_format($order['subtotal'], 0, ',', '.') }}đ</small>
-                                @endif
-                                <span class="fw-bold text-primary">{{ number_format($order['total'], 0, ',', '.') }}đ</span>
-                            </div>
-                        </div>
-                        {{-- Nút xem chi tiết --}}
-                        <div class="mt-2">
-                            <a href="/order/success/{{ $order['id'] }}" class="btn btn-sm btn-outline-secondary">
-                                <i class="fas fa-eye me-1"></i>Xem chi tiết
-                            </a>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="card-body text-center text-muted py-4">
-                    <i class="fas fa-box-open fs-3 d-block mb-2"></i>
-                    Bạn chưa có đơn hàng nào.
-                    <br><a href="/" class="btn btn-primary btn-sm mt-2">Mua sắm ngay</a>
-                </div>
-            @endif
         </div>
 
     </div>

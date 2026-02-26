@@ -3,10 +3,10 @@ class Cart extends Model
 {
     private $table = "cart";
     
-    // Find all items for a specific user
+    // tim tat ca san pham trong gio hang cua user
     public function findByUser($userId)
     {
-        $sql = "SELECT c.*, p.name as product_name, p.price, p.img 
+        $sql = "SELECT c.*, p.name as product_name, p.price, p.img, p.quantity as stock 
                 FROM $this->table c 
                 JOIN product p ON c.id_product = p.id 
                 WHERE c.id_user = :id_user";
@@ -16,7 +16,7 @@ class Cart extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Find specific item in cart for a user
+    // tim san pham trong gio hang
     public function findItem($userId, $productId)
     {
         $sql = "SELECT * FROM $this->table WHERE id_user = :id_user AND id_product = :id_product";
@@ -58,7 +58,6 @@ class Cart extends Model
         return $stmt->execute(['id' => $id]);
     }
 
-    // Xóa toàn bộ giỏ hàng của user sau khi đặt hàng thành công
     public function deleteByUser($userId) {
         $sql = "DELETE FROM $this->table WHERE id_user = :id_user";
         $conn = $this->connect();
