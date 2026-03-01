@@ -44,10 +44,21 @@
         <h5 class="card-title fw-bold"><i class="fas fa-filter me-2"></i>Lọc giá</h5>
     </div>
     <div class="card-body">
-         <div class="d-flex gap-2 mb-3">
-              <input type="number" class="form-control form-control-sm" placeholder="Từ">
-              <input type="number" class="form-control form-control-sm" placeholder="Đến">
-         </div>
-         <button class="btn btn-primary w-100 btn-sm">Áp dụng</button>
+         <form action="/home/index" method="GET">
+             <div class="d-flex gap-2 mb-3">
+                  <input type="number" name="min_price" class="form-control form-control-sm" placeholder="Từ" value="<?php echo e(isset($minPrice) ? $minPrice : ''); ?>">
+                  <input type="number" name="max_price" class="form-control form-control-sm" placeholder="Đến" value="<?php echo e(isset($maxPrice) ? $maxPrice : ''); ?>">
+             </div>
+             <?php if(isset($selectedCategory)): ?>
+                 <input type="hidden" name="id_category" value="<?php echo e($selectedCategory); ?>">
+             <?php endif; ?>
+             <?php if(isset($selectedTrademark)): ?>
+                 <input type="hidden" name="id_trademark" value="<?php echo e($selectedTrademark); ?>">
+             <?php endif; ?>
+             <?php if(isset($keyword)): ?>
+                 <input type="hidden" name="q" value="<?php echo e($keyword); ?>">
+             <?php endif; ?>
+             <button type="submit" class="btn btn-primary w-100 btn-sm">Áp dụng</button>
+         </form>
     </div>
 </div><?php /**PATH C:\xampp\htdocs\lab2-30-1-26\PHP2\app\views/layouts/includes/slidebar.blade.php ENDPATH**/ ?>

@@ -21,10 +21,26 @@
             </form>
 
             <?php if(isset($_SESSION['user_id'])): ?>
+                    <?php
+                        $cartCount = 0;
+                        try {
+                            if (class_exists('Model')) {
+                                $db = new class extends Model {
+                                    public function getCartCount($userId) {
+                                        $stmt = $this->connect()->prepare("SELECT SUM(quantity) FROM cart WHERE id_user = ?");
+                                        $stmt->execute([$userId]);
+                                        return $stmt->fetchColumn() ?: 0;
+                                    }
+                                };
+                                $cartCount = $db->getCartCount($_SESSION['user_id']);
+                            }
+                        } catch (Exception $e) {}
+                    ?>
                     <a href="/cart" class="position-relative text-dark text-decoration-none me-2">
                         <i class="fas fa-shopping-cart fs-5"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
-                            3
+                            <?php echo e($cartCount); ?>
+
                         </span> 
                     </a>
                 

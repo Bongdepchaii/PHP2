@@ -43,10 +43,21 @@
         <h5 class="card-title fw-bold"><i class="fas fa-filter me-2"></i>Lọc giá</h5>
     </div>
     <div class="card-body">
-         <div class="d-flex gap-2 mb-3">
-              <input type="number" class="form-control form-control-sm" placeholder="Từ">
-              <input type="number" class="form-control form-control-sm" placeholder="Đến">
-         </div>
-         <button class="btn btn-primary w-100 btn-sm">Áp dụng</button>
+         <form action="/home/index" method="GET">
+             <div class="d-flex gap-2 mb-3">
+                  <input type="number" name="min_price" class="form-control form-control-sm" placeholder="Từ" value="{{ isset($minPrice) ? $minPrice : '' }}">
+                  <input type="number" name="max_price" class="form-control form-control-sm" placeholder="Đến" value="{{ isset($maxPrice) ? $maxPrice : '' }}">
+             </div>
+             @if(isset($selectedCategory))
+                 <input type="hidden" name="id_category" value="{{ $selectedCategory }}">
+             @endif
+             @if(isset($selectedTrademark))
+                 <input type="hidden" name="id_trademark" value="{{ $selectedTrademark }}">
+             @endif
+             @if(isset($keyword))
+                 <input type="hidden" name="q" value="{{ $keyword }}">
+             @endif
+             <button type="submit" class="btn btn-primary w-100 btn-sm">Áp dụng</button>
+         </form>
     </div>
 </div>

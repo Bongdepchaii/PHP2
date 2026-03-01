@@ -28,6 +28,20 @@
         <div class="row g-3">
             <?php
             $catMap = array_column($categories, 'name', 'id');
+            if (!class_exists('QtyHelperHome')) {
+                class QtyHelperHome extends Model {
+                    public function getTotalQty($product) {
+                        $total = $product['quantity'] ?? 0;
+                        try {
+                            $stmt = $this->connect()->prepare("SELECT SUM(quantity) FROM variant WHERE id_product = ?");
+                            $stmt->execute([$product['id']]);
+                            $total += (int)$stmt->fetchColumn();
+                        } catch (\Exception $e) {}
+                        return $total;
+                    }
+                }
+            }
+            $qtyHelperHome = new QtyHelperHome();
             ?>
             <?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
             <div class="col-12 col-sm-6 col-xl-4">
@@ -50,13 +64,13 @@
                             <a href="/product/detail/<?php echo e($item['id']); ?>" class="text-decoration-none text-dark"><?php echo e($item['name']); ?></a>
                         </h6>
                         <span class="card-title mb-1 fw-bold text-truncate">
-                            <a href="/product/detail/<?php echo e($item['id']); ?>" class="text-decoration-none text-primary">Số lượng: <?php echo e($item ['quantity']); ?></a>
+                            <a href="/product/detail/<?php echo e($item['id']); ?>" class="text-decoration-none text-primary">Số lượng: <?php echo e($qtyHelperHome->getTotalQty($item)); ?></a>
                         </span>
                         <!-- <p class="card-text text-muted small mb-2 flex-grow-1"><?php echo e(substr($item['mota'], 0, 80) . "..."); ?></p> -->
                         
                         <div class="mt-auto pt-3 border-top">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <div class="fw-bold text-danger fs-5"><?php echo e(number_format($item['price'], 0, ',', '.')); ?>đ</div>
+                                <div class="fw-bold text-danger fs-5"><?php echo e($item['price_vnd'] ?? number_format($item['price'], 0, ',', '.') . 'đ'); ?></div>
                             </div>
                             <div class="d-grid gap-2">
                                 <div class="btn-group">

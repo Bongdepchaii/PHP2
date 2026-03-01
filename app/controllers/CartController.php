@@ -195,6 +195,7 @@ class CartController extends Controller
             $orderModel->createItem([
                 'id_order'     => $orderId,
                 'id_product'   => $item['id_product'],
+                'id_variant'   => $item['id_variant'] ?? null,
                 'product_name' => $item['product_name'],
                 'price'        => $item['price'],
                 'quantity'     => $item['quantity'],
@@ -224,9 +225,10 @@ class CartController extends Controller
 
         $userId   = $_SESSION['user_id'];
         $quantity = 1;
+        $variantId = $_GET['variant_id'] ?? null;
 
         $cartModel    = $this->model('cart');
-        $existingItem = $cartModel->findItem($userId, $productId);
+        $existingItem = $cartModel->findItem($userId, $productId, $variantId);
 
         if ($existingItem) {
             $result = $cartModel->updateQuantity($existingItem['id'], $existingItem['quantity'] + $quantity);
@@ -234,6 +236,7 @@ class CartController extends Controller
             $result = $cartModel->create([
                 'id_user'    => $userId,
                 'id_product' => $productId,
+                'id_variant' => $variantId,
                 'quantity'   => $quantity
             ]);
         }

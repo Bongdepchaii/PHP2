@@ -411,7 +411,7 @@
         row.innerHTML = `
             <div class="col-md-3">
                 <label class="form-label small">Màu sắc</label>
-                <select class="form-select form-select-sm" name="variant_id_color[]" required>
+                <select class="form-select form-select-sm" name="variant_id_color[]">
                     <option value="">-- Chọn màu --</option>
                     @foreach($colors as $col)
                         <option value="{{ $col['id'] }}">{{ $col['name'] }}</option>
@@ -420,7 +420,7 @@
             </div>
             <div class="col-md-3">
                 <label class="form-label small">ROM/Bộ nhớ</label>
-                <select class="form-select form-select-sm" name="variant_id_rom[]" required>
+                <select class="form-select form-select-sm" name="variant_id_rom[]">
                     <option value="">-- Chọn ROM --</option>
                     @if(isset($roms))
                         @foreach($roms as $rom)
@@ -549,13 +549,13 @@
         row.innerHTML = `
             <div class="col-md-3">
                 <label class="form-label small">Màu sắc</label>
-                <select class="form-select form-select-sm" name="variant_id_color[]" required>
+                <select class="form-select form-select-sm" name="variant_id_color[]">
                     ${colorOptions}
                 </select>
             </div>
             <div class="col-md-3">
                 <label class="form-label small">ROM/Bộ nhớ</label>
-                <select class="form-select form-select-sm" name="variant_id_rom[]" required>
+                <select class="form-select form-select-sm" name="variant_id_rom[]">
                     ${romOptions}
                 </select>
             </div>
@@ -579,5 +579,21 @@
             row.remove();
         });
     }
+
+    // Validate Form: Phải có ít nhất 1 option cho variant (Màu hoặc ROM)
+    document.addEventListener('submit', function(e) {
+        if(e.target.tagName === 'FORM' && (e.target.action.includes('/product/add') || e.target.action.includes('/product/update'))) {
+            const rows = e.target.querySelectorAll('.variant-row');
+            for(let i=0; i<rows.length; i++) {
+                const color = rows[i].querySelector('select[name="variant_id_color[]"]').value;
+                const rom = rows[i].querySelector('select[name="variant_id_rom[]"]').value;
+                if (!color && !rom) {
+                    e.preventDefault();
+                    alert("Vui lòng chọn ít nhất Màu sắc hoặc ROM cho tất cả các phiên bản (Variants)!");
+                    return false;
+                }
+            }
+        }
+    });
 </script>
 @endpush

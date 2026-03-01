@@ -124,10 +124,33 @@ class OrderController extends Controller
         $newStatus = $_POST['status'] ?? '';
         $allowed   = ['pending', 'confirmed', 'shipping', 'done', 'cancelled'];
 
+        $orderModel = $this->model('order');
+        $oldOrder = $orderModel->findWithItems($orderId);
+
         if (!in_array($newStatus, $allowed)) {
             $_SESSION['error'] = "Trạng thái không hợp lệ";
         } else {
-            $this->model('order')->updateStatus($orderId, $newStatus);
+            $orderModel->updateStatus($orderId, $newStatus);
+
+            // Trừ tồn kho nếu trạng thái được chuyển sang 'done' và trạng thái trước đó chưa phải là 'done'
+            if ($newStatus === 'done' && $oldOrder && $oldOrder['status'] !== 'done') {
+                $db = new class extends Model {
+                    public function decreaseStock($productId, $variantId, $qty) {
+                        $conn = $this->connect();
+                        if ($variantId) {
+                            $stmt = $conn->prepare("UPDATE variant SET quantity = GREATEST(0, CAST(quantity AS SIGNED) - ?) WHERE id = ?");
+                            $stmt->execute([$qty, $variantId]);
+                        } else {
+                            $stmt = $conn->prepare("UPDATE product SET quantity = GREATEST(0, CAST(quantity AS SIGNED) - ?) WHERE id = ?");
+                            $stmt->execute([$qty, $productId]);
+                        }
+                    }
+                };
+                foreach ($oldOrder['items'] as $item) {
+                    $db->decreaseStock($item['id_product'], $item['id_variant'] ?? null, $item['quantity']);
+                }
+            }
+
             $_SESSION['success'] = "Đã cập nhật trạng thái đơn hàng #" . $orderId;
         }
 

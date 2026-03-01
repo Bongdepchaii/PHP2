@@ -116,11 +116,11 @@ class Productcontroller extends Controller
                     $variantQties  = $_POST['variant_quantity'];
 
                     for ($i = 0; $i < count($variantColors); $i++) {
-                        if (!empty($variantColors[$i]) && !empty($variantRoms[$i])) {
+                        if (!empty($variantColors[$i]) || !empty($variantRoms[$i])) {
                             $variantModel->create([
                                 'id_product' => $newProductId,
-                                'id_color'   => $variantColors[$i],
-                                'id_rom'     => $variantRoms[$i],
+                                'id_color'   => !empty($variantColors[$i]) ? $variantColors[$i] : null,
+                                'id_rom'     => !empty($variantRoms[$i]) ? $variantRoms[$i] : null,
                                 'price'      => $variantPrices[$i] ?? 0,
                                 'quantity'   => $variantQties[$i] ?? 0
                             ]);
@@ -233,11 +233,11 @@ class Productcontroller extends Controller
                     $variantQties  = $_POST['variant_quantity'];
 
                     for ($i = 0; $i < count($variantColors); $i++) {
-                        if (!empty($variantColors[$i]) && !empty($variantRoms[$i])) {
+                        if (!empty($variantColors[$i]) || !empty($variantRoms[$i])) {
                             $variantModel->create([
                                 'id_product' => $id,
-                                'id_color'   => $variantColors[$i],
-                                'id_rom'     => $variantRoms[$i],
+                                'id_color'   => !empty($variantColors[$i]) ? $variantColors[$i] : null,
+                                'id_rom'     => !empty($variantRoms[$i]) ? $variantRoms[$i] : null,
                                 'price'      => $variantPrices[$i] ?? 0,
                                 'quantity'   => $variantQties[$i] ?? 0
                             ]);

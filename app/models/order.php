@@ -32,15 +32,23 @@ class Order extends Model
     // them tung san pham vao order_items
     public function createItem($data = [])
     {
-        $sql = "INSERT INTO {$this->tableItems}
-                    (id_order, id_product, product_name, price, quantity)
-                VALUES
-                    (:id_order, :id_product, :product_name, :price, :quantity)";
         $conn = $this->connect();
+        
+        // Thêm cột id_variant vào bảng order_items (nếu chưa có)
+        try {
+            $conn->exec("ALTER TABLE {$this->tableItems} ADD COLUMN id_variant INT NULL DEFAULT NULL AFTER id_product");
+        } catch (\Exception $e) {}
+
+        $sql = "INSERT INTO {$this->tableItems}
+                    (id_order, id_product, id_variant, product_name, price, quantity)
+                VALUES
+                    (:id_order, :id_product, :id_variant, :product_name, :price, :quantity)";
+        
         $stmt = $conn->prepare($sql);
         return $stmt->execute([
             'id_order'     => $data['id_order'],
             'id_product'   => $data['id_product'],
+            'id_variant'   => $data['id_variant'] ?? null,
             'product_name' => $data['product_name'],
             'price'        => $data['price'],
             'quantity'     => $data['quantity'],

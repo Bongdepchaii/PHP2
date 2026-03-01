@@ -141,6 +141,65 @@ class Product extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC)['cnt'] ?? 0;
     }
 
+    // fiter xu ly nhieu dieu kien
+    public function filter($categoryId, $trademarkId, $keyword, $minPrice, $maxPrice, $page = 1, $perPage = 10)
+    {
+        $conn = $this->connect();
+        $where = [];
+        $params = [];
+
+        if ($categoryId) {
+            $where[] = "id_category = :id_category";
+            $params[':id_category'] = $categoryId;
+        }
+        if ($trademarkId) {
+            $where[] = "id_trademark = :id_trademark";
+            $params[':id_trademark'] = $trademarkId;
+        }
+        if ($keyword) {
+            $where[] = "name LIKE :keyword";
+            $params[':keyword'] = '%' . $keyword . '%';
+        }
+        if ($minPrice !== null && $minPrice !== '') {
+            $where[] = "price >= :min_price";
+            $params[':min_price'] = $minPrice;
+        }
+        if ($maxPrice !== null && $maxPrice !== '') {
+            $where[] = "price <= :max_price";
+            $params[':max_price'] = $maxPrice;
+        }
+
+        $whereSql = empty($where) ? "" : "WHERE " . implode(" AND ", $where);
+        
+        // Count total
+        $sqlCount = "SELECT COUNT(*) as count FROM {$this->table} $whereSql";
+        $stmtCount = $conn->prepare($sqlCount);
+        foreach ($params as $key => $val) {
+            $stmtCount->bindValue($key, $val);
+        }
+        $stmtCount->execute();
+        $total = $stmtCount->fetch(PDO::FETCH_ASSOC)['count'] ?? 0;
+
+        // Fetch products
+        $offset = ($page - 1) * $perPage;
+        $sql = "SELECT * FROM {$this->table} $whereSql ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+        $stmt = $conn->prepare($sql);
+        foreach ($params as $key => $val) {
+            $stmt->bindValue($key, $val);
+        }
+        $stmt->bindValue(':limit', (int)$perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Định dạng giá VNĐ theo yêu cầu
+        foreach ($products as &$product) {
+            $product['price_vnd'] = number_format($product['price'], 0, ',', '.') . ' VNĐ';
+        }
+
+        return ['products' => $products, 'total' => $total];
+    }
+
     // thong ke san pham: tong, het hang, con hang, moi
     public function getStats()
     {
