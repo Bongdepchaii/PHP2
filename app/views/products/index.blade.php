@@ -194,7 +194,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Danh mục</label>
                             <select class="form-select" name="id_category" required>
-                                <option value="">-- Chọn danh mục --</option>
+                                <option value=""> Chọn danh mục </option>
                                 @foreach($categories as $cat)
                                     <option value="{{ $cat['id'] }}">{{ $cat['name'] }}</option>
                                 @endforeach
@@ -203,7 +203,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Hãng sản xuất</label>
                             <select class="form-select" name="id_trademark">
-                                <option value="">-- Chọn hãng --</option>
+                                <option value=""> Chọn hãng </option>
                                 @foreach($trademarks as $tm)
                                     <option value="{{ $tm['id'] }}">{{ $tm['name'] }}</option>
                                 @endforeach

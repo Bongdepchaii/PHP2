@@ -199,7 +199,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Danh mục</label>
                             <select class="form-select" name="id_category" required>
-                                <option value="">-- Chọn danh mục --</option>
+                                <option value=""> Chọn danh mục </option>
                                 <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <option value="<?php echo e($cat['id']); ?>"><?php echo e($cat['name']); ?></option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -208,7 +208,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Hãng sản xuất</label>
                             <select class="form-select" name="id_trademark">
-                                <option value="">-- Chọn hãng --</option>
+                                <option value=""> Chọn hãng </option>
                                 <?php $__currentLoopData = $trademarks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <option value="<?php echo e($tm['id']); ?>"><?php echo e($tm['name']); ?></option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
