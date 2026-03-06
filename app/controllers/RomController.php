@@ -15,6 +15,11 @@ class RomController extends Controller
 
     public function add()
     {
+        if (!$_SESSION['user_id']) {
+                $_SESSION['error'] = "Bạn chưa đăng nhập";
+                $this->redirect('/auth/login');
+                return;
+            }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = trim($_POST['name']);
             // var_dump($_POST);

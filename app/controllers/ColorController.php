@@ -25,8 +25,11 @@ class ColorController extends Controller
                 $color->create(array(
                     'name' => $name
                 ));
-                $_SESSION['success'] = "add successful";
+                $_SESSION['success'] = "Thêm màu sắc thành công";
                 $this->redirect('/color');
+            } else if (!$_SESSION['user_id']) {
+                $_SESSION['error'] = "Bạn chưa đăng nhập";
+                $this->redirect('/auth/login');
             }
         }
         $_SESSION['error'] = "add failed";
@@ -40,6 +43,9 @@ class ColorController extends Controller
             $this->view("products/color/edit", [
                 'color' => $data
             ]);
+        } else if (!$_SESSION['user_id']) {
+            $_SESSION['error'] = "Bạn chưa đăng nhập";
+            $this->redirect('/auth/login');
         } else {
             $name = trim($_POST['name']);
             if (!empty($name)) {
@@ -51,7 +57,7 @@ class ColorController extends Controller
                     $id
                 );
                 if ($isSuccess) {
-                    $_SESSION['success'] = "upadted successful";
+                    $_SESSION['success'] = "Cập nhật màu sắc thành công";
                 }
                 $this->redirect('/color');
             }
@@ -59,11 +65,16 @@ class ColorController extends Controller
     }
     public function delete($id)
     {
+        if (!$_SESSION['user_id']) {
+                $_SESSION['error'] = "Bạn chưa đăng nhập";
+                $this->redirect('/auth/login');
+            } else {
         $color = $this->model('color');
         $isSuccess = $color->delete($id);
         if ($isSuccess) {
-            $_SESSION['success'] = "delete successful";
+            $_SESSION['success'] = "Xoá màu sắc thành công";
         }
-         $this->redirect('/color');
+        $this->redirect('/color');
+            }
     }
 }

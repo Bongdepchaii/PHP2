@@ -16,6 +16,11 @@ class CategoryController extends Controller
 
     public function add()
     {
+        if (!$_SESSION['user_id']) {
+            $_SESSION['error'] = "Bạn chưa đăng nhập";
+            $this->redirect('/auth/login');
+            return;
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = trim($_POST['name']);
             if (!empty($name)) {
@@ -32,6 +37,11 @@ class CategoryController extends Controller
 
     public function update($id)
     {
+        if (!$_SESSION['user_id']) {
+            $_SESSION['error'] = "Bạn chưa đăng nhập";
+            $this->redirect('/auth/login');
+            return;
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = trim($_POST['name']);
             if (!empty($name)) {
@@ -50,7 +60,13 @@ class CategoryController extends Controller
         $this->redirect('/category');
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
+        if (!$_SESSION['user_id']) {
+            $_SESSION['error'] = "Bạn chưa đăng nhập";
+            $this->redirect('/auth/login');
+            return;
+        }
         $category = $this->model('category');
         $category->delete($id);
         $_SESSION['error'] = "Xóa danh mục thành công";

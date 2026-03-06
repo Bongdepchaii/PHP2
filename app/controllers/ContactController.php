@@ -30,7 +30,7 @@ class ContactController extends Controller
         $errors = [];
         if (empty($full_name))                          $errors[] = "Vui lòng nhập họ tên.";
         if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL))
-                                                        $errors[] = "Email không hợp lệ.";
+            $errors[] = "Email không hợp lệ.";
         if (empty($phone))                              $errors[] = "Vui lòng nhập số điện thoại.";
         if (!preg_match('/^[0-9\+\-\s]{7,15}$/', $phone)) $errors[] = "Số điện thoại không hợp lệ.";
         if (empty($subject))                            $errors[] = "Vui lòng chọn chủ đề.";
@@ -111,6 +111,11 @@ class ContactController extends Controller
 
     public function delete($id)
     {
+        if (!$_SESSION['user_id']) {
+            $_SESSION['error'] = "Bạn chưa đăng nhập";
+            $this->redirect('/auth/login');
+            return;
+        }
         $result = $this->model('contact')->delete($id);
         $_SESSION[$result ? 'success' : 'error'] = $result
             ? "Đã xóa liên hệ #$id"

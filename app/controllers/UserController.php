@@ -104,6 +104,11 @@ class UserController extends Controller
 
     public function deleteFavorite($id)
     {
+            if (!$_SESSION['user_id']) {
+                $_SESSION['error'] = "Bạn chưa đăng nhập";
+                $this->redirect('/auth/login');
+                return;
+            }
         $favoriteModel = $this->model('favorite');
         $favoriteModel->delete($id);
         $_SESSION['success'] = "Đã xóa khỏi danh sách yêu thích";

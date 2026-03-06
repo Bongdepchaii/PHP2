@@ -121,6 +121,11 @@ class OrderController extends Controller
 
     public function updateStatus($orderId)
     {
+            if (!$_SESSION['user_id']) {
+                $_SESSION['error'] = "Bạn chưa đăng nhập";
+                $this->redirect('/auth/login');
+                return;
+            }
         $newStatus = $_POST['status'] ?? '';
         $allowed   = ['pending', 'confirmed', 'shipping', 'done', 'cancelled'];
 

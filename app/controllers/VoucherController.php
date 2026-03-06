@@ -16,6 +16,11 @@ class VoucherController extends Controller
 
     public function add()
     {
+            if (!$_SESSION['user_id']) {
+                $_SESSION['error'] = "Bạn chưa đăng nhập";
+                $this->redirect('/auth/login');
+                return;
+            }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $voucherModel = $this->model('voucher');
             
@@ -54,6 +59,11 @@ class VoucherController extends Controller
 
     public function update($id)
     {
+            if (!$_SESSION['user_id']) {
+                $_SESSION['error'] = "Bạn chưa đăng nhập";
+                $this->redirect('/auth/login');
+                return;
+            }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $voucherModel = $this->model('voucher');
             
@@ -82,6 +92,11 @@ class VoucherController extends Controller
 
     public function delete($id)
     {
+            if (!$_SESSION['user_id']) {
+                $_SESSION['error'] = "Bạn chưa đăng nhập";
+                $this->redirect('/auth/login');
+                return;
+            }
         $voucherModel = $this->model('voucher');
         $result = $voucherModel->delete($id);
         
