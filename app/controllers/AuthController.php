@@ -31,7 +31,7 @@ class AuthController extends Controller
                     // $_SESSION['success'] = "Đăng nhập thành công";
                     
                     if ($user['role'] == 'admin') {
-                        $this->redirect('/booking');
+                        $this->redirect('/dashboard');
                     } else {
                         $this->redirect('/home/index');
                     }

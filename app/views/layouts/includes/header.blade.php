@@ -55,7 +55,7 @@
                         <li><a class="dropdown-item mt-1" href="/user/favorite">Yêu thích sản phẩm</a></li>
                         <li><a class="dropdown-item mt-1" href="/order/history">Đơn hàng đã đặt</a></li>
                         @if($_SESSION['role'] == 'admin')
-                        <li><a class="dropdown-item mt-1" href="/product">Quản lý</a></li>
+                        <li><a class="dropdown-item mt-1" href="/dashboard">Quản lý</a></li>
                         @endif
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="/auth/logout">Đăng xuất</a></li>

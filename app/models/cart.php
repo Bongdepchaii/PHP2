@@ -63,14 +63,15 @@ class Cart extends Model
 
     public function create($data = [])
     {
-        $sql = "INSERT INTO $this->table (id_user, id_product, id_variant, quantity) VALUES (:id_user, :id_product, :id_variant, :quantity)";
+        $sql = "INSERT INTO $this->table (id_user, id_product, id_variant, quantity, created_at) VALUES (:id_user, :id_product, :id_variant, :quantity, :created_at)";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
             'id_user'    => $data['id_user'],
             'id_product' => $data['id_product'],
             'id_variant' => $data['id_variant'] ?? null,
-            'quantity'   => $data['quantity']
+            'quantity'   => $data['quantity'],
+            'created_at' => date('Y-m-d H:i:s')
         ]);
     }
 
